@@ -1,0 +1,158 @@
+﻿<Window
+    x:Class="NaviatePage.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Menu="clr-namespace:NaviatePage.Stores"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:NaviatePage"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:NaviatePage.ViewModels"
+    xmlns:views="clr-namespace:NaviatePage.Views"
+    x:Name="mainwindow"
+    Title="MainWindow"
+    AllowsTransparency="True"
+    Background="Transparent"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <!--<Grid Margin="5" Background="#212529">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel
+            Grid.Row="0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+            <Button
+                x:Name="CloseApp"
+                Width="50"
+                Command="{Binding MiniMizeWindowCommand}"
+                Content="Thu nhỏ" />
+            <Button
+                x:Name="CloseApp1"
+                Width="50"
+                Command="{Binding MaximizedWindowCommand}"
+
+                Margin="20 0 20 0"
+                Content="Phóng to" />
+            <Button
+                x:Name="CloseApp2"
+                Style="{StaticResource ExitApp}"
+                VerticalAlignment="Center"
+                Cursor="Hand"
+                Command="{Binding CloseWindowCommand}" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <ContentControl x:Name="Navigate">
+                    <views:NavigateView HorizontalAlignment="Left" DataContext="{Binding NavigationViewModel}" />
+                </ContentControl>
+            </Grid>
+
+            <Grid Grid.Column="1">
+
+                <ContentControl x:Name="Pages" Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </Grid>
+    </Grid>-->
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <materialDesign:Card Grid.Row="1">
+            <TabControl
+                Background="Transparent"
+                SelectedItem="0"
+                Style="{StaticResource MaterialDesignFilledTabControl}"
+                TabStripPlacement="Left">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" CommandParameter="{Binding SelectedItem.Header, RelativeSource={RelativeSource AncestorType=TabControl}}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <TabItem Header="Home">
+                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+                </TabItem>
+
+                <TabItem Header="Customer">
+
+                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+                </TabItem>
+
+                <TabItem Header="Order">
+                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+                </TabItem>
+
+                <TabItem Header="Transaction">
+
+                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+                </TabItem>
+
+                <TabItem Header="Shipment">
+
+                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+                </TabItem>
+
+                <TabItem Header="Setting">
+                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+                </TabItem>
+
+                <TabItem Header="Product">
+
+                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+                </TabItem>
+            </TabControl>
+        </materialDesign:Card>
+
+        <Grid Grid.Row="0" Width="{Binding ElementName=mainwindow, Path=Width}" Background="#212529">
+            <StackPanel
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+
+                <!--  Button Thu nhỏ  -->
+                <Button
+                    x:Name="MinimizeApp"
+                    Height="40"
+                    Margin="0,0,10,0"
+                    Command="{Binding MiniMizeWindowCommand}"
+                    Content="Thu nhỏ" />
+
+                <!--  Button Phóng to  -->
+                <Button
+                    x:Name="MaximizeApp"
+                    Height="40"
+                    Margin="0,0,10,0"
+                    Command="{Binding MaximizedWindowCommand}"
+                    Content="Phóng to" />
+
+                <!--  Button Đóng cửa sổ  -->
+                <Button
+                    x:Name="CloseApp"
+                    Width="40"
+                    Height="40"
+                    Command="{Binding CloseWindowCommand}"
+                    Cursor="Hand"
+                    Style="{StaticResource ExitApp}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

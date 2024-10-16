@@ -1,0 +1,82 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "QuanLyKhoContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": "",
+   "OutputContextPath": "Models",
+   "OutputPath": "Models\/Data",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "NaviatePage",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "public.customer",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.input",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.inputinfo",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.material",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.output",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.outputinfo",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.supplier",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.unit",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.userrole",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.users",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
