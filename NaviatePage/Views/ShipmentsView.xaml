@@ -9,11 +9,32 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
-        <Border>
+    <Grid Background="White">
+        <!--<Border>
             <Border.Background>
                 <ImageBrush ImageSource="C:\Users\tuana\OneDrive\HK3\C#\WPF\NavigatePage\NaviatePage\NaviatePage\Images\shipment_page.png" Stretch="UniformToFill" />
             </Border.Background>
-        </Border>
+        </Border>-->
+
+        <ListView ItemsSource="{Binding Items1}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Code}" Header="Code" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Description" />
+                    <GridViewColumn Header="Options">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox Width="100">
+                                    <ComboBoxItem Content="Test" />
+                                    <ComboBoxItem Content="Test2" />
+                                    <ComboBoxItem Content="Test3" />
+                                </ComboBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </UserControl>

@@ -75,52 +75,52 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <materialDesign:Card Grid.Row="1">
-            <TabControl
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <materialDesign:Card Grid.Column="0">
+                <TabControl
                 Background="Transparent"
                 SelectedItem="0"
                 Style="{StaticResource MaterialDesignFilledTabControl}"
                 TabStripPlacement="Left">
 
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" CommandParameter="{Binding SelectedItem.Header, RelativeSource={RelativeSource AncestorType=TabControl}}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" CommandParameter="{Binding SelectedItem.Header, RelativeSource={RelativeSource AncestorType=TabControl}}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
-                <TabItem Header="Home">
-                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
-                </TabItem>
+                    <TabItem Header="Home">
+                    </TabItem>
 
-                <TabItem Header="Customer">
+                    <TabItem Header="Customer">
+                    </TabItem>
 
-                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
-                </TabItem>
+                    <TabItem Header="Order">
+                    </TabItem>
 
-                <TabItem Header="Order">
-                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
-                </TabItem>
+                    <TabItem Header="Transaction">
+                    </TabItem>
 
-                <TabItem Header="Transaction">
+                    <TabItem Header="Shipment">
+                    </TabItem>
 
-                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
-                </TabItem>
+                    <TabItem Header="Setting">
+                    </TabItem>
 
-                <TabItem Header="Shipment">
+                    <TabItem Header="Product">
+                    </TabItem>
+                </TabControl>
+            </materialDesign:Card>
 
-                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
-                </TabItem>
-
-                <TabItem Header="Setting">
-                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
-                </TabItem>
-
-                <TabItem Header="Product">
-
-                    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
-                </TabItem>
-            </TabControl>
-        </materialDesign:Card>
+            <Grid Grid.Column="1">
+                <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </Grid>
 
         <Grid Grid.Row="0" Width="{Binding ElementName=mainwindow, Path=Width}" Background="#212529">
             <StackPanel

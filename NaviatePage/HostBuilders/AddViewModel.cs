@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NaviatePage.Components;
 using NaviatePage.Models;
 using NaviatePage.Models.Data;
 using NaviatePage.Stores;
@@ -26,20 +27,18 @@ namespace NaviatePage.HostBuilders
                 services.AddTransient<SettingViewModel>();
                 services.AddTransient<ShipmentViewModel>();
                 services.AddTransient<TransactionViewModel>();
-
                 services.AddTransient<CustomerViewModel>(provider => new CustomerViewModel(provider));
                 services.AddTransient<MainViewModel>(provider => new MainViewModel(provider));
-
-                services.AddSingleton<NavigationStore>(provider => new NavigationStore(provider.GetRequiredService<HomViewModel>()));
+                services.AddTransient<AddCustomerViewModel>(provider => new AddCustomerViewModel(provider));
+                services.AddTransient<EditCustomerViewModel>();
 
                 services.AddSingleton<MainWindow>(provider => new MainWindow(provider.GetRequiredService<MainViewModel>()));
-                services.AddSingleton<ViewModelLocator>(provider => new ViewModelLocator(provider));
+                services.AddSingleton<NavigationStore>(provider => new NavigationStore(provider.GetRequiredService<HomViewModel>()));
 
-                string connectionString = "Host=ep-lingering-art-a4mvt05a-pooler.us-east-1.aws.neon.tech;Port=5432;Database=verceldb;Username=default;Password=tkqSdm4wyja1;SSL Mode=Require;Trust Server Certificate=true;";
-                Action<DbContextOptionsBuilder> configureDbContext = o => o.UseNpgsql(connectionString);
-
-                services.AddDbContext<QuanLyKhoContext>(configureDbContext);
-                services.AddSingleton<QuanLyKhoContextFactory>(new QuanLyKhoContextFactory(configureDbContext));
+                //string connectionString = "Host=ep-lingering-art-a4mvt05a-pooler.us-east-1.aws.neon.tech;Port=5432;Database=verceldb;Username=default;Password=tkqSdm4wyja1;SSL Mode=Require;Trust Server Certificate=true;";
+                //Action<DbContextOptionsBuilder> configureDbContext = o => o.UseNpgsql(connectionString);
+                //services.AddDbContext<QuanLyKhoContext>(configureDbContext);
+                //services.AddSingleton<QuanLyKhoContextFactory>(new QuanLyKhoContextFactory(configureDbContext));
 
                 services.AddSingleton<IDataService<Customer>, GenericDataService<Customer>>();
             });

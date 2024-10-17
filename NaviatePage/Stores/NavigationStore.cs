@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace NaviatePage.Stores
 {
-    public partial class NavigationStore : ObservableObject
+    public partial class NavigationStore
     {
         private ObservableObject _currentViewModel;
-        private HomViewModel homViewModel;
 
         public NavigationStore(HomViewModel homViewModel)
         {
@@ -24,7 +23,7 @@ namespace NaviatePage.Stores
             get => _currentViewModel;
             set
             {
-                SetProperty(ref _currentViewModel, value);
+                _currentViewModel = value;
                 OnCurrentViewModelChanged();
             }
         }

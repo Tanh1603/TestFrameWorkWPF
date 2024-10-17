@@ -26,12 +26,13 @@ namespace NaviatePage
 
         public App()
         {
-            _host = CreateHostBuilder().AddViewModels().Build();
+            _host = CreateHostBuilder().Build();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] arg = null)
         {
-            return Host.CreateDefaultBuilder(arg).AddViewModels();
+            return Host.CreateDefaultBuilder(arg).AddConfiguration().AddDbContext()
+                        .AddViewModels();
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -40,8 +41,8 @@ namespace NaviatePage
             QuanLyKhoContextFactory quanLyKhoContextFactory = _host.Services.GetService<QuanLyKhoContextFactory>();
             using (QuanLyKhoContext quanLyKho = quanLyKhoContextFactory.CreateDbContext())
             {
-                quanLyKho.Database.Migrate();
-            }
+                //quanLyKho.Database.Migrate();
+            };
             Window window = _host.Services.GetRequiredService<MainWindow>();
 
             window.Show();
