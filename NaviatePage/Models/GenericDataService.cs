@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using NaviatePage.Models.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +70,20 @@ namespace NaviatePage.Models
                     return existingEntity;
                 }
                 return null;
+            }
+        }
+
+        public async Task<(IEnumerable<T> items, int totalCount)> GetPaged(int pageNumber, int pageSize)
+        {
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                var totalCount = await context.Set<T>().CountAsync(); // Đếm tổng số phần tử
+                var items = await context.Set<T>()
+                    .Skip((pageNumber - 1) * pageSize) // Bỏ qua số phần tử theo trang trước đó
+                    .Take(pageSize) // Lấy số phần tử theo kích thước trang
+                    .ToListAsync();
+
+                return (items, totalCount);
             }
         }
     }

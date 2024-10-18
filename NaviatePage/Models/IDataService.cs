@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using NaviatePage.Models.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +19,11 @@ namespace NaviatePage.Models
         Task<T> Update(int id, T entity);
 
         Task<bool> Delete(int id);
+
+        //Task<(IEnumerable<T> items, int totalCount)> GetPaged(int pageNumber, int pageSize);
+
+        //Task<IEnumerable<T>> SearchCustomer(string searchTerm);
+
+        //Task<int> GetTotalCout();
     }
 }

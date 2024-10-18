@@ -84,7 +84,7 @@
             <materialDesign:Card Grid.Column="0">
                 <TabControl
                 Background="Transparent"
-                SelectedItem="0"
+                SelectedItem="3"
                 Style="{StaticResource MaterialDesignFilledTabControl}"
                 TabStripPlacement="Left">
 

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace NaviatePage.Components
 {
@@ -45,25 +46,32 @@ namespace NaviatePage.Components
         [RelayCommand]
         private void Submit()
         {
-            Customer customer = new Customer()
+            try
             {
-                Idcustomer = int.Parse(this.Id),
-                Displayname = this.DisplayName,
-                Address = this.Address,
-                Phone = this.Phone,
-                Email = this.Email,
-                Moreinfo = this.MoreInfo,
-                Contractdate = this.ContractDate,
-            };
+                Customer customer = new Customer()
+                {
+                    Idcustomer = int.Parse(this.Id),
+                    Displayname = this.DisplayName,
+                    Address = this.Address,
+                    Phone = this.Phone,
+                    Email = this.Email,
+                    Moreinfo = this.MoreInfo,
+                    Contractdate = this.ContractDate,
+                };
 
-            this.Id = null;
-            this.DisplayName = null;
-            this.Address = null;
-            this.Phone = null;
-            this.Email = null;
-            this.MoreInfo = null;
-            this.ContractDate = null;
-            SelectedCustomerChanged?.Invoke(customer);
+                this.Id = null;
+                this.DisplayName = null;
+                this.Address = null;
+                this.Phone = null;
+                this.Email = null;
+                this.MoreInfo = null;
+                this.ContractDate = null;
+                SelectedCustomerChanged?.Invoke(customer);
+            }
+            catch
+            {
+                MessageBox.Show("Lỗi không thêm được");
+            }
         }
 
         public void Dispose()

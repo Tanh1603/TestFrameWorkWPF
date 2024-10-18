@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customModal="clr-namespace:ModalControl;assembly=ModalControl"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:loadingSpiner="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
     xmlns:local="clr-namespace:NaviatePage.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -12,71 +14,138 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid Background="White">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+    <Grid Background="White">
+        <Grid Margin="20">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <!--  Mặc định là ẩn  -->
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <!--  Hiện khi IsLoadingData là true  -->
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="False">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <!--  Ẩn khi IsLoadingData là false  -->
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="20">
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Button
-                        Width="100"
-                        Margin="0,0,20,0"
-                        materialDesign:ButtonAssist.CornerRadius="10"
-                        Command="{Binding OpenAddCustomerCommand}"
-                        Style="{StaticResource MaterialDesignRaisedButton}"
-                        ToolTip="MaterialDesignRaisedButton with Round Corners">
-                        <TextBlock Text="Thêm" />
-                    </Button>
+                <Grid Grid.Row="0" Margin="20">
+                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Tìm kiếm" Command="{Binding SerchCustomerCommand}" IsEnabled="False" />
+                        <TextBox
+                            MinWidth="450"
+                            Margin="20 0 20 0"
+                            materialDesign:HintAssist.Hint="Tìm kiếm"
 
-                    <Button
-                        Width="100"
-                        materialDesign:ButtonAssist.CornerRadius="10"
-                        Command="{Binding OpenDeleteCustomerCommand}"
-                        Style="{StaticResource MaterialDesignRaisedButton}"
-                        ToolTip="MaterialDesignRaisedButton with Round Corners">
-                        <TextBlock Text="Xóa" />
-                    </Button>
+                            Text="{Binding InputSearch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                        <Button
+                            Width="100"
+                            Margin="0,0,20,0"
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Command="{Binding OpenAddCustomerCommand}"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            ToolTip="MaterialDesignRaisedButton with Round Corners">
+                            <TextBlock Text="Thêm" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
 
+                <Border Grid.Row="1">
+                    <Grid>
+
+                        <ListView
+                            HorizontalAlignment="Center"
+                            Background="Wheat"
+                            ItemsSource="{Binding CustomerListInPage, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedItem="{Binding SelectedCustomer, UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Idcustomer}" Header="Id" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Displayname}" Header="DisplayName" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Address}" Header="Address" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Phone}" Header="Phone" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Email}" Header="Email" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Moreinfo}" Header="MoreInfo" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Contractdate}" Header="Date" />
+
+                                    <GridViewColumn Header="Options">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="Opened">
+                                                            <i:InvokeCommandAction Command="{Binding DataContext.SelectCustomerPopupCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}" />
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+
+                                                    <ListBox>
+                                                        <ListBoxItem HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                            <Button
+                                                                materialDesign:ButtonAssist.CornerRadius="10"
+                                                                Command="{Binding DataContext.OpenDeleteCustomerCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                                                ToolTip="MaterialDesignRaisedButton with Round Corners">
+                                                                <TextBlock Text="Xóa" />
+                                                            </Button>
+                                                        </ListBoxItem>
+                                                        <ListBoxItem HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                            <Button
+                                                                materialDesign:ButtonAssist.CornerRadius="10"
+                                                                Command="{Binding DataContext.OpenUpdateCustomerCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                                                ToolTip="MaterialDesignRaisedButton with Round Corners">
+                                                                <TextBlock Text="Sửa" />
+                                                            </Button>
+                                                        </ListBoxItem>
+                                                    </ListBox>
+                                                </materialDesign:PopupBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Border>
+
+                <StackPanel
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
                     <Button
-                        Width="100"
-                        Margin="20,0,0,0"
-                        materialDesign:ButtonAssist.CornerRadius="10"
-                        Command="{Binding OpenUpdateCustomerCommand}"
-                        CommandParameter="{Binding SelectedCustomer}"
-                        Style="{StaticResource MaterialDesignRaisedButton}"
-                        ToolTip="MaterialDesignRaisedButton with Round Corners">
-                        <TextBlock Text="Sửa" />
-                    </Button>
+                        Margin="10"
+                        Command="{Binding FirstPageCommand}"
+                        Content="Trang đầu" />
+                    <Button
+                        Margin="10"
+                        Command="{Binding NextPageCommand}"
+                        Content="Trang tiếp" />
+                    <TextBlock
+                        Padding="10,5,10,5"
+                        VerticalAlignment="Center"
+                        Background="AntiqueWhite"
+                        Text="{Binding CurrentPage}" />
+                    <Button
+                        Margin="10"
+                        Command="{Binding PreviousPageCommand}"
+                        Content="Trang trước" />
+                    <Button
+                        Margin="10"
+                        Command="{Binding LastPageCommand}"
+                        Content="Trang cuối" />
                 </StackPanel>
             </Grid>
-
-            <Border
-                Grid.Row="1"
-                BorderBrush="Black"
-                BorderThickness="1">
-                <Grid>
-                    <ListView
-                        HorizontalAlignment="Center"
-                        Background="Wheat"
-                        ItemsSource="{Binding CustomerList}"
-                        SelectedItem="{Binding SelectedCustomer}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Idcustomer}" Header="Id" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Displayname}" Header="DisplayName" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Address}" Header="Address" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Phone}" Header="Phone" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Email}" Header="Email" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Moreinfo}" Header="MoreInfo" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Contractdate}" Header="Date" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </Grid>
-            </Border>
         </Grid>
 
         <Grid>
@@ -89,6 +158,35 @@
             <customModal:Modal IsOpen="{Binding IsEditModalOpen}">
                 <ContentControl Content="{Binding EditCustomerVM}" />
             </customModal:Modal>
+        </Grid>
+
+        <Grid Background="White" VerticalAlignment="Center">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
+
+                    <!--Mặc định là ẩn-->
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+
+                            <!--Hiện khi IsLoadingData là true-->
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed" />
+
+                            <!--Ẩn khi IsLoadingData là false-->
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock  Grid.Row="0" Margin="0 0 0 10" Text="Đang tải tài nguyên ..." HorizontalAlignment="Center" />
+            <loadingSpiner:LoadingSpinner Diameter="50" IsLoading="{Binding IsLoadingData}" Background="White" Grid.Row="1"  Margin="0" />
         </Grid>
     </Grid>
 </UserControl>
