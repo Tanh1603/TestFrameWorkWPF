@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using NaviatePage.Components;
@@ -17,6 +18,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Navigation;
 using System.Windows.Threading;
@@ -84,6 +86,21 @@ namespace NaviatePage.ViewModels
 
         #endregion Property cho việc lấy tổng số trang, trang hiện tại, tổng số trang khi tìm kiếm
 
+        private ComboBoxItem _selectedSortStyleCustomer;
+
+        public ComboBoxItem SelectedSortStyleCustomer
+        {
+            get => _selectedSortStyleCustomer;
+            set
+            {
+                _selectedSortStyleCustomer = value;
+                if (value != null)
+                {
+                    SortCustomerListCommand?.Execute(null);
+                }
+            }
+        }
+
         public string InputSearch
         {
             get => _inputSearch;
@@ -94,11 +111,13 @@ namespace NaviatePage.ViewModels
                 if (!string.IsNullOrEmpty(value))
                 {
                     SerchCustomerCommand.Execute(null);
+                    SortCustomerListCommand.ExecuteAsync(null);
                 }
                 else
                 {
                     CustomerListTotalPage = CustomerList;
                     LoadPage(PageNumber, CustomerListTotalPage);
+                    SortCustomerListCommand.ExecuteAsync(null);
                 }
             }
         }
@@ -136,11 +155,19 @@ namespace NaviatePage.ViewModels
             try
             {
                 Customer newCustomer = await _serviceProvider.GetRequiredService<IDataService<Customer>>().Create(customer);
-                if (this.CustomerList != null && newCustomer != null)
+                if (CustomerList != null && newCustomer != null)
                 {
-                    this.CustomerList.Add(newCustomer);
+                    CustomerList.Add(newCustomer);
                 }
-                await SerchCustomerCommand.ExecuteAsync(null);
+                if (!string.IsNullOrEmpty(InputSearch))
+                {
+                    await SerchCustomerCommand.ExecuteAsync(null);
+                }
+                else
+                {
+                    await LoadPage(PageNumber, CustomerList);
+                }
+                await SortCustomerListCommand.ExecuteAsync(null);
             }
             catch (Exception ex)
             {
@@ -179,12 +206,11 @@ namespace NaviatePage.ViewModels
         private async Task UpdateCustomer(int id, Customer customer)
         {
             await _serviceProvider.GetRequiredService<IDataService<Customer>>().Update(id, customer);
-            int index = CustomerList.IndexOf(CustomerList.FirstOrDefault(x => x.Idcustomer == id));
+            int index = CustomerListInPage.IndexOf(CustomerList.FirstOrDefault(x => x.Idcustomer == id));
 
             if (index != -1)
             {
-                CustomerList[index] = customer;
-                await SerchCustomerCommand.ExecuteAsync(null);
+                CustomerListInPage[index] = customer;
             }
         }
 
@@ -222,18 +248,28 @@ namespace NaviatePage.ViewModels
 
             await _serviceProvider.GetRequiredService<IDataService<Customer>>().Delete(SelectedCustomer.Idcustomer);
             CustomerList.Remove(SelectedCustomer);
-            await SerchCustomerCommand.ExecuteAsync(null);
-            //await LoadPage(PageNumber, CustomerList);
+            if (!string.IsNullOrEmpty(InputSearch))
+            {
+                await SerchCustomerCommand.ExecuteAsync(null);
+            }
+            else
+            {
+                await LoadPage(PageNumber, CustomerList);
+            }
+            await SortCustomerListCommand.ExecuteAsync(null);
             IsLoadingData = false;
         }
 
         [RelayCommand]
         private async Task SerchCustomer()
         {
-            var customers = CustomerList.Where(x => x.Displayname != null && x.Displayname.ToLower().Contains(InputSearch.ToLower())).ToList();
-            CustomerListTotalPage = new ObservableCollection<Customer>(customers);
-            PageNumber = 1;
-            await LoadPage(PageNumber, CustomerListTotalPage);
+            if (!string.IsNullOrEmpty(InputSearch))
+            {
+                var customers = CustomerList.Where(x => x.Displayname != null && x.Displayname.ToLower().Contains(InputSearch.ToLower())).ToList();
+                CustomerListTotalPage = new ObservableCollection<Customer>(customers);
+                PageNumber = 1;
+                await LoadPage(PageNumber, CustomerListTotalPage);
+            }
         }
 
         #endregion Chức năng thêm xóa sửa, tìm kiếm
@@ -258,27 +294,42 @@ namespace NaviatePage.ViewModels
             TotalPage = (totalCount + pageSize - 1) / pageSize;
             CurrentPage = $"{pageNumber} / {TotalPage}";
             CustomerListInPage = new ObservableCollection<Customer>(customers.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList());
+            CustomerListTotalPage = customers;
             IsLoadingData = false;
+
+            if (TotalPage == 0)
+            {
+                FirstPageCommand.NotifyCanExecuteChanged();
+                PreviousPageCommand.NotifyCanExecuteChanged();
+                LastPageCommand.NotifyCanExecuteChanged();
+                NextPageCommand.NotifyCanExecuteChanged();
+            }
         }
 
         [RelayCommand]
         private void FirstPage()
         {
-            PageNumber = 1;
-            Task.Run(() => LoadPage(PageNumber, CustomerListTotalPage)).Wait();
+            if (TotalPage != 0)
+            {
+                PageNumber = 1;
+                Task.Run(() => LoadPage(PageNumber, CustomerListTotalPage)).Wait();
+            }
         }
 
         [RelayCommand]
         private void LastPage()
         {
-            PageNumber = TotalPage;
-            Task.Run(() => LoadPage(PageNumber, CustomerListTotalPage)).Wait();
+            if (TotalPage != 0)
+            {
+                PageNumber = TotalPage;
+                Task.Run(() => LoadPage(PageNumber, CustomerListTotalPage)).Wait();
+            }
         }
 
         [RelayCommand]
         private void NextPage()
         {
-            if (_pageNumber != TotalPage)
+            if (PageNumber != TotalPage && TotalPage != 0)
             {
                 PageNumber += 1;
                 Task.Run(() => LoadPage(PageNumber, CustomerListTotalPage)).Wait();
@@ -288,7 +339,7 @@ namespace NaviatePage.ViewModels
         [RelayCommand]
         private void PreviousPage()
         {
-            if (_pageNumber != 1)
+            if (PageNumber != 1 && TotalPage != 0)
             {
                 PageNumber -= 1;
                 Task.Run(() => LoadPage(PageNumber, CustomerListTotalPage)).Wait();
@@ -296,5 +347,52 @@ namespace NaviatePage.ViewModels
         }
 
         #endregion Chức năng phân trang 1 lần chỉ hiện thi đươc 10 tran
+
+        [RelayCommand]
+        private async Task SortCustomerList()
+        {
+            if (SelectedSortStyleCustomer != null)
+            {
+                string tmp = SelectedSortStyleCustomer.Content.ToString();
+                switch (tmp)
+                {
+                    case "Idcustomer":
+                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Idcustomer));
+                        break;
+
+                    case "Displayname":
+                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Displayname));
+                        break;
+
+                    case "Address":
+                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Address));
+                        break;
+
+                    case "Phone":
+                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Phone));
+                        break;
+
+                    case "Email":
+                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Email));
+                        break;
+
+                    case "Moreinfo":
+                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Moreinfo));
+                        break;
+
+                    case "Contractdate":
+                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Contractdate));
+                        break;
+
+                    default:
+                        break;
+                }
+                await LoadPage(PageNumber, CustomerListTotalPage);
+            }
+            else
+            {
+                return;
+            }
+        }
     }
 }

@@ -40,15 +40,40 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="20">
-                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="Tìm kiếm" Command="{Binding SerchCustomerCommand}" IsEnabled="False" />
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Button
+                            Command="{Binding SerchCustomerCommand}"
+                            Content="Tìm kiếm"
+                            IsEnabled="False" />
                         <TextBox
                             MinWidth="450"
-                            Margin="20 0 20 0"
+                            Margin="20,0,20,0"
                             materialDesign:HintAssist.Hint="Tìm kiếm"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            Text="{Binding InputSearch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
-                            Text="{Binding InputSearch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                        <Button
+                            Width="100"
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            ToolTip="MaterialDesignRaisedButton with Round Corners">
+                            <TextBlock Text="Sắp xếp" />
+                        </Button>
+
+                        <ComboBox
+                            materialDesign:HintAssist.Hint="With helper text"
+                            Margin="20 0 20 0"
+                            SelectedValue="{Binding SelectedSortStyleCustomer}"
+                            Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                            <ComboBoxItem Content="Idcustomer" />
+                            <ComboBoxItem Content="Displayname" />
+                            <ComboBoxItem Content="Address" />
+                            <ComboBoxItem Content="Phone" />
+                            <ComboBoxItem Content="Email" />
+                            <ComboBoxItem Content="Moreinfo" />
+                            <ComboBoxItem Content="Contractdate" />
+                        </ComboBox>
+
                         <Button
                             Width="100"
                             Margin="0,0,20,0"
@@ -160,23 +185,23 @@
             </customModal:Modal>
         </Grid>
 
-        <Grid Background="White" VerticalAlignment="Center">
+        <Grid VerticalAlignment="Center" Background="White">
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Setter Property="Visibility" Value="Collapsed" />
 
-                    <!--Mặc định là ẩn-->
+                    <!--  Mặc định là ẩn  -->
 
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsLoadingData}" Value="True">
                             <Setter Property="Visibility" Value="Visible" />
 
-                            <!--Hiện khi IsLoadingData là true-->
+                            <!--  Hiện khi IsLoadingData là true  -->
                         </DataTrigger>
                         <DataTrigger Binding="{Binding IsLoadingData}" Value="False">
                             <Setter Property="Visibility" Value="Collapsed" />
 
-                            <!--Ẩn khi IsLoadingData là false-->
+                            <!--  Ẩn khi IsLoadingData là false  -->
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -185,8 +210,17 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBlock  Grid.Row="0" Margin="0 0 0 10" Text="Đang tải tài nguyên ..." HorizontalAlignment="Center" />
-            <loadingSpiner:LoadingSpinner Diameter="50" IsLoading="{Binding IsLoadingData}" Background="White" Grid.Row="1"  Margin="0" />
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,0,0,10"
+                HorizontalAlignment="Center"
+                Text="Đang tải tài nguyên ..." />
+            <loadingSpiner:LoadingSpinner
+                Grid.Row="1"
+                Margin="0"
+                Background="White"
+                Diameter="50"
+                IsLoading="{Binding IsLoadingData}" />
         </Grid>
     </Grid>
 </UserControl>
