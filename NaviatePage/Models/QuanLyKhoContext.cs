@@ -222,6 +222,10 @@ public partial class QuanLyKhoContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(100)
                 .HasColumnName("username");
+            entity.Property(e => e.Email)
+                    .IsRequired() // Có thể thiết lập là bắt buộc hay không
+                    .HasMaxLength(255) // Thiết lập độ dài tối đa
+                    .HasColumnName("email"); // Tên cột trong cơ sở dữ liệu
 
             entity.HasOne(d => d.IduserroleNavigation).WithMany(p => p.Users)
                 .HasForeignKey(d => d.Iduserrole)

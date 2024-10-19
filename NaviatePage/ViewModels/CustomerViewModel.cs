@@ -1,27 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MaterialDesignColors;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using NaviatePage.Components;
 using NaviatePage.Models;
 using NaviatePage.Models.Data;
-using NaviatePage.Stores;
-using NaviatePage.Views;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using System.Windows.Navigation;
-using System.Windows.Threading;
 
 namespace NaviatePage.ViewModels
 {
@@ -86,7 +72,11 @@ namespace NaviatePage.ViewModels
 
         #endregion Property cho việc lấy tổng số trang, trang hiện tại, tổng số trang khi tìm kiếm
 
+        #region Property cho việc sắp xếp tăng giảm theo danh mục
+
         private ComboBoxItem _selectedSortStyleCustomer;
+
+        private int _selectedTypeSortCustomer;
 
         public ComboBoxItem SelectedSortStyleCustomer
         {
@@ -100,6 +90,21 @@ namespace NaviatePage.ViewModels
                 }
             }
         }
+
+        public int SelectedTypeSortCustomer
+        {
+            get => _selectedTypeSortCustomer;
+            set
+            {
+                _selectedTypeSortCustomer = value;
+                if (value != null)
+                {
+                    SortCustomerListCommand?.Execute(null);
+                }
+            }
+        }
+
+        #endregion Property cho việc sắp xếp tăng giảm theo danh mục
 
         public string InputSearch
         {
@@ -125,7 +130,6 @@ namespace NaviatePage.ViewModels
         public CustomerViewModel(IServiceProvider provider)
         {
             _serviceProvider = provider;
-
             Task.Run(() => InitializeAsync());
         }
 
@@ -206,12 +210,20 @@ namespace NaviatePage.ViewModels
         private async Task UpdateCustomer(int id, Customer customer)
         {
             await _serviceProvider.GetRequiredService<IDataService<Customer>>().Update(id, customer);
-            int index = CustomerListInPage.IndexOf(CustomerList.FirstOrDefault(x => x.Idcustomer == id));
-
+            int index = CustomerList.IndexOf(CustomerList.FirstOrDefault(x => x.Idcustomer == id));
             if (index != -1)
             {
-                CustomerListInPage[index] = customer;
+                CustomerList[index] = customer;
+                if (string.IsNullOrEmpty(InputSearch))
+                {
+                    await LoadPage(PageNumber, CustomerList);
+                }
+                else
+                {
+                    await SerchCustomerCommand.ExecuteAsync(null);
+                }
             }
+            await SortCustomerListCommand.ExecuteAsync(null);
         }
 
         [RelayCommand]
@@ -265,7 +277,16 @@ namespace NaviatePage.ViewModels
         {
             if (!string.IsNullOrEmpty(InputSearch))
             {
-                var customers = CustomerList.Where(x => x.Displayname != null && x.Displayname.ToLower().Contains(InputSearch.ToLower())).ToList();
+                //var customers = CustomerList.Where(x => x.Displayname != null && x.Displayname.ToLower().Contains(InputSearch.ToLower())).ToList();
+                var customers = CustomerList.Where(x =>
+                    (x.Displayname != null && x.Displayname.ToLower().Contains(InputSearch.ToLower())) ||
+                    (x.Address != null && x.Address.ToLower().Contains(InputSearch.ToLower())) ||
+                    (x.Phone != null && x.Phone.ToLower().Contains(InputSearch.ToLower())) ||
+                    (x.Email != null && x.Email.ToLower().Contains(InputSearch.ToLower())) ||
+                    (x.Moreinfo != null && x.Moreinfo.ToLower().Contains(InputSearch.ToLower())) ||
+                    (x.Contractdate.ToString().ToLower().Contains(InputSearch.ToLower()))
+                ).ToList();
+
                 CustomerListTotalPage = new ObservableCollection<Customer>(customers);
                 PageNumber = 1;
                 await LoadPage(PageNumber, CustomerListTotalPage);
@@ -292,6 +313,10 @@ namespace NaviatePage.ViewModels
             IsLoadingData = true;
             int totalCount = customers.Count;
             TotalPage = (totalCount + pageSize - 1) / pageSize;
+            if (pageNumber > TotalPage)
+            {
+                pageNumber = TotalPage;
+            }
             CurrentPage = $"{pageNumber} / {TotalPage}";
             CustomerListInPage = new ObservableCollection<Customer>(customers.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList());
             CustomerListTotalPage = customers;
@@ -348,6 +373,8 @@ namespace NaviatePage.ViewModels
 
         #endregion Chức năng phân trang 1 lần chỉ hiện thi đươc 10 tran
 
+        #region Chức năng sắp xếp tăng giảm dần theo danh mục
+
         [RelayCommand]
         private async Task SortCustomerList()
         {
@@ -357,31 +384,80 @@ namespace NaviatePage.ViewModels
                 switch (tmp)
                 {
                     case "Idcustomer":
-                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Idcustomer));
+                        if (SelectedTypeSortCustomer == 0)
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Idcustomer));
+                        }
+                        else
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderByDescending(x => x.Idcustomer));
+                        }
                         break;
 
                     case "Displayname":
-                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Displayname));
+                        if (SelectedTypeSortCustomer == 0)
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Displayname));
+                        }
+                        else
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderByDescending(x => x.Displayname));
+                        }
                         break;
 
                     case "Address":
-                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Address));
+                        if (SelectedTypeSortCustomer == 0)
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Address));
+                        }
+                        else
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderByDescending(x => x.Address));
+                        }
                         break;
 
                     case "Phone":
-                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Phone));
+                        if (SelectedTypeSortCustomer == 0)
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Phone));
+                        }
+                        else
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderByDescending(x => x.Phone));
+                        }
                         break;
 
                     case "Email":
-                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Email));
+                        if (SelectedTypeSortCustomer == 0)
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Email));
+                        }
+                        else
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderByDescending(x => x.Email));
+                        }
                         break;
 
                     case "Moreinfo":
-                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Moreinfo));
+                        if (SelectedTypeSortCustomer == 0)
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Moreinfo));
+                        }
+                        else
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderByDescending(x => x.Moreinfo));
+                        }
                         break;
 
                     case "Contractdate":
-                        CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Contractdate));
+                        if (SelectedTypeSortCustomer == 0)
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderBy(x => x.Contractdate));
+                        }
+                        else
+                        {
+                            CustomerListTotalPage = new ObservableCollection<Customer>(CustomerListTotalPage.OrderByDescending(x => x.Contractdate));
+                        }
                         break;
 
                     default:
@@ -394,5 +470,7 @@ namespace NaviatePage.ViewModels
                 return;
             }
         }
+
+        #endregion Chức năng sắp xếp tăng giảm dần theo danh mục
     }
 }

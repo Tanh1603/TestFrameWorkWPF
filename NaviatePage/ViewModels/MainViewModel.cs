@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualBasic.Logging;
 using NaviatePage.Stores;
 using NaviatePage.ViewModels;
 using System;
@@ -8,13 +9,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace NaviatePage.ViewModel
 {
-    public partial class MainViewModel : ObservableObject, IDisposable
+    public partial class MainViewModel : ObservableObject
     {
         private readonly NavigationStore _navigationStore;
         private IServiceProvider _serviceProvider;
@@ -26,62 +28,17 @@ namespace NaviatePage.ViewModel
         private string _title;
 
         public MainViewModel(IServiceProvider provider)
+
         {
             _serviceProvider = provider;
             _navigationStore = provider.GetRequiredService<NavigationStore>();
+            //CurrentViewModel = _serviceProvider.GetRequiredService<NavigateViewModel>();
+            CurrentViewModel = _serviceProvider.GetRequiredService<LoginViewModel>();
+            //CurrentViewModel = _serviceProvider.GetRequiredService<RegisterViewModel>();
             _navigationStore.CurrentViewModelChanged += () =>
             {
-                OnCurrentViewModelChanged(CurrentViewModel);
                 CurrentViewModel = _navigationStore.CurrentViewModel;
             };
-            CurrentViewModel = _serviceProvider.GetRequiredService<HomViewModel>();
-        }
-
-        [RelayCommand]
-        private void TabSelectionChanged(string type)
-        {
-            switch (type)
-            {
-                case "Home":
-                    //CurrentViewModel = _serviceProvider.GetRequiredService<HomViewModel>();
-                    _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<HomViewModel>(); ;
-                    break;
-
-                case "Customer":
-                    //CurrentViewModel = _serviceProvider.GetRequiredService<CustomerViewModel>();
-                    _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<CustomerViewModel>();
-                    break;
-
-                case "Order":
-                    //CurrentViewModel = _serviceProvider.GetRequiredService<OrderViewModel>();
-                    _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<OrderViewModel>();
-                    break;
-
-                case "Transaction":
-                    //CurrentViewModel = _serviceProvider.GetRequiredService<TransactionViewModel>();
-                    _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<TransactionViewModel>(); ;
-                    break;
-
-                case "Shipment":
-                    //CurrentViewModel = _serviceProvider.GetRequiredService<ShipmentViewModel>();
-                    _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<ShipmentViewModel>();
-                    break;
-
-                case "Setting":
-                    //CurrentViewModel = _serviceProvider.GetRequiredService<SettingViewModel>();
-                    _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<SettingViewModel>();
-                    break;
-
-                case "Product":
-                    CurrentViewModel = _serviceProvider.GetRequiredService<ProductViewModel>();
-                    _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<ProductViewModel>();
-                    break;
-
-                default:
-                    //CurrentViewModel = _serviceProvider.GetRequiredService<HomViewModel>();
-                    _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<HomViewModel>(); ;
-                    break;
-            }
         }
 
         [RelayCommand]
@@ -110,10 +67,6 @@ namespace NaviatePage.ViewModel
             {
                 window.WindowState = WindowState.Normal;
             }
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

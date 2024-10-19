@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:viewmodels="clr-namespace:NaviatePage.ViewModels"
     xmlns:components="clr-namespace:NaviatePage.Components"
+    xmlns:viewmodels="clr-namespace:NaviatePage.ViewModels"
     xmlns:views="clr-namespace:NaviatePage.Views">
     <DataTemplate DataType="{x:Type viewmodels:HomViewModel}">
         <views:HomeView />
@@ -38,5 +38,17 @@
 
     <DataTemplate DataType="{x:Type components:EditCustomerViewModel}">
         <components:EditCustomerView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
+        <views:LoginView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewmodels:RegisterViewModel}">
+        <views:RegisterView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewmodels:NavigateViewModel}">
+        <views:NavigateView />
     </DataTemplate>
 </ResourceDictionary>

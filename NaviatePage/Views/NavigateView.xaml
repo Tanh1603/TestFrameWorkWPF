@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Menu="clr-namespace:NaviatePage.Stores"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:NaviatePage.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,116 +12,42 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <!--  // Navigation Panel //  -->
-    <Grid>
+    <Grid Background="White">
 
-        <StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <materialDesign:Card Grid.Column="0">
+            <TabControl
+                Background="Transparent"
+                Style="{StaticResource MaterialDesignFilledTabControl}"
+                TabStripPlacement="Left">
 
-            <!--  // Home //  -->
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" CommandParameter="{Binding SelectedItem.Header, RelativeSource={RelativeSource AncestorType=TabControl}}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
 
-            <Menu:Btn
-                Command="{Binding NavigateViewModelCommand}"
-                CommandParameter="Home"
-                IsChecked="True"
-                Style="{StaticResource BtnStyle}">
+                <TabItem Header="Home" />
 
-                <Grid>
+                <TabItem Header="Customer" />
 
-                    <Image Source="/Images/img_home.png" Style="{StaticResource Image_Style}" />
+                <TabItem Header="Order" />
 
-                    <TextBlock Style="{StaticResource Text_Style}" Text="Home" />
-                </Grid>
-            </Menu:Btn>
+                <TabItem Header="Transaction" />
 
-            <!--  // Customer //  -->
+                <TabItem Header="Shipment" />
 
-            <Menu:Btn
-                Command="{Binding NavigateViewModelCommand}"
-                CommandParameter="Customer"
-                Style="{StaticResource BtnStyle}">
+                <TabItem Header="Setting" />
 
-                <Grid>
+                <TabItem Header="Product" />
+            </TabControl>
+        </materialDesign:Card>
 
-                    <Image Source="/Images/img_customer.png" Style="{StaticResource Image_Style}" />
-
-                    <TextBlock Style="{StaticResource Text_Style}" Text="Customer" />
-                </Grid>
-            </Menu:Btn>
-
-            <!--  // Products //  -->
-
-            <Menu:Btn
-                Command="{Binding NavigateViewModelCommand}"
-                CommandParameter="Product"
-                Style="{StaticResource BtnStyle}">
-
-                <Grid>
-
-                    <Image Source="/Images/img_product.png" Style="{StaticResource Image_Style}" />
-
-                    <TextBlock Style="{StaticResource Text_Style}" Text="Products" />
-                </Grid>
-            </Menu:Btn>
-
-            <!--  // Orders //  -->
-
-            <Menu:Btn
-                Command="{Binding NavigateViewModelCommand}"
-                CommandParameter="Order"
-                Style="{StaticResource BtnStyle}">
-
-                <Grid>
-
-                    <Image Source="/Images/img_order.png" Style="{StaticResource Image_Style}" />
-
-                    <TextBlock Style="{StaticResource Text_Style}" Text="Orders" />
-                </Grid>
-            </Menu:Btn>
-
-            <!--  // Transactions //  -->
-
-            <Menu:Btn
-                Command="{Binding NavigateViewModelCommand}"
-                CommandParameter="Transaction"
-                Style="{StaticResource BtnStyle}">
-
-                <Grid>
-
-                    <Image Source="/Images/img_transaction.png" Style="{StaticResource Image_Style}" />
-
-                    <TextBlock Style="{StaticResource Text_Style}" Text="Transactions" />
-                </Grid>
-            </Menu:Btn>
-
-            <!--  // Shipments //  -->
-
-            <Menu:Btn
-                Command="{Binding NavigateViewModelCommand}"
-                CommandParameter="Shipment"
-                Style="{StaticResource BtnStyle}">
-
-                <Grid>
-
-                    <Image Source="/Images/img_shipment.png" Style="{StaticResource Image_Style}" />
-
-                    <TextBlock Style="{StaticResource Text_Style}" Text="Shipments" />
-                </Grid>
-            </Menu:Btn>
-
-            <!--  // Settings //  -->
-
-            <Menu:Btn
-                Command="{Binding NavigateViewModelCommand}"
-                CommandParameter="Setting"
-                Style="{StaticResource BtnStyle}">
-
-                <Grid>
-
-                    <Image Source="/Images/img_setting.png" Style="{StaticResource Image_Style}" />
-
-                    <TextBlock Style="{StaticResource Text_Style}" Text="Settings" />
-                </Grid>
-            </Menu:Btn>
-        </StackPanel>
+        <Grid Grid.Column="1" Background="Transparent">
+            <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
     </Grid>
 </UserControl>

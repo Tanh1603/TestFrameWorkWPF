@@ -32,15 +32,14 @@ namespace NaviatePage.HostBuilders
                 services.AddTransient<AddCustomerViewModel>(provider => new AddCustomerViewModel(provider));
                 services.AddTransient<EditCustomerViewModel>();
 
-                services.AddSingleton<MainWindow>(provider => new MainWindow(provider.GetRequiredService<MainViewModel>()));
-                services.AddSingleton<NavigationStore>(provider => new NavigationStore(provider.GetRequiredService<HomViewModel>()));
+                services.AddSingleton<NavigationStore>((s) => new NavigationStore(s));
 
-                //string connectionString = "Host=ep-lingering-art-a4mvt05a-pooler.us-east-1.aws.neon.tech;Port=5432;Database=verceldb;Username=default;Password=tkqSdm4wyja1;SSL Mode=Require;Trust Server Certificate=true;";
-                //Action<DbContextOptionsBuilder> configureDbContext = o => o.UseNpgsql(connectionString);
-                //services.AddDbContext<QuanLyKhoContext>(configureDbContext);
-                //services.AddSingleton<QuanLyKhoContextFactory>(new QuanLyKhoContextFactory(configureDbContext));
+                services.AddTransient<LoginViewModel>((s) => new LoginViewModel(s));
+                services.AddTransient<RegisterViewModel>(s => new RegisterViewModel(s));
+                services.AddTransient<NavigateViewModel>(s => new NavigateViewModel(s));
 
                 services.AddSingleton<IDataService<Customer>, GenericDataService<Customer>>();
+                services.AddSingleton<MainWindow>(provider => new MainWindow(provider.GetRequiredService<MainViewModel>()));
             });
 
             return hostBuilder;

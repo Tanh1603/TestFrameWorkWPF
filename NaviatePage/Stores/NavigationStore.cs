@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using NaviatePage.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,11 @@ namespace NaviatePage.Stores
     public partial class NavigationStore
     {
         private ObservableObject _currentViewModel;
+        private readonly IServiceProvider _serviceProvider;
 
-        public NavigationStore(HomViewModel homViewModel)
+        public NavigationStore(IServiceProvider serviceProvider)
         {
-            _currentViewModel = homViewModel;
+            _serviceProvider = serviceProvider;
         }
 
         public ObservableObject CurrentViewModel
@@ -27,6 +29,8 @@ namespace NaviatePage.Stores
                 OnCurrentViewModelChanged();
             }
         }
+
+        public IServiceProvider S { get; }
 
         public event Action CurrentViewModelChanged;
 

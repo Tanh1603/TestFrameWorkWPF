@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NaviatePage.HostBuilders;
 using NaviatePage.Models;
+using NaviatePage.Services;
 using NaviatePage.Stores;
 using NaviatePage.ViewModel;
 using NaviatePage.ViewModels;
@@ -39,11 +40,12 @@ namespace NaviatePage
         {
             _host.Start();
             QuanLyKhoContextFactory quanLyKhoContextFactory = _host.Services.GetService<QuanLyKhoContextFactory>();
-            using (QuanLyKhoContext quanLyKho = quanLyKhoContextFactory.CreateDbContext())
-            {
-                //quanLyKho.Database.Migrate();
-            };
+            //using (QuanLyKhoContext quanLyKho = quanLyKhoContextFactory.CreateDbContext())
+            //{
+            //    quanLyKho.Database.Migrate();
+            //};
             Window window = _host.Services.GetRequiredService<MainWindow>();
+            var user = _host.Services.GetRequiredService<FirebaseAuthService>();
 
             window.Show();
             base.OnStartup(e);
