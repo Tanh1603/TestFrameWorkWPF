@@ -1,23 +1,132 @@
-﻿<UserControl x:Class="NaviatePage.Views.RegisterView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:NaviatePage.Views"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="NaviatePage.Views.RegisterView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:NaviatePage.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pass="clr-namespace:NaviatePage.Services"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <Grid Background="White">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="450">
-            <TextBox materialDesign:HintAssist.Hint="Tên đăng nhập" Style="{StaticResource MaterialDesignOutlinedTextBox}" Margin="20" />
-            <TextBox materialDesign:HintAssist.Hint="Email" Style="{StaticResource MaterialDesignOutlinedTextBox}" Margin="20" />
-            <PasswordBox materialDesign:HintAssist.Hint="Mật khẩu" Style="{StaticResource MaterialDesignOutlinedPasswordBox}" Margin="20" />
+        <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
 
-            <Button materialDesign:ButtonAssist.CornerRadius="10" Style="{StaticResource MaterialDesignRaisedButton}" Margin="20" Command="{Binding SubmitCommand }">
-                <TextBlock Text="Đăng Kí" />
-            </Button>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="False">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
 
-            <Button Content="Chuyển qua đăng nhập" Background="Transparent" MaxWidth="200" Foreground="Black" Command="{Binding MoveLoginCommand}" />
-        </StackPanel>
+            <StackPanel
+                MinWidth="450"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <TextBox
+                    Margin="20"
+                    materialDesign:HintAssist.Hint="Tên đăng nhập"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                    <TextBox.Text>
+                        <Binding Path="UserName" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <pass:NotEmptyValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <TextBox
+                    Margin="20"
+                    materialDesign:HintAssist.Hint="Email"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                    <TextBox.Text>
+                        <Binding Path="EmailTextBox" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <pass:EmailValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <PasswordBox
+                    Margin="20"
+                    materialDesign:HintAssist.Hint="Mật khẩu"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource MaterialDesignOutlinedPasswordBox}">
+                    <materialDesign:PasswordBoxAssist.Password>
+                        <Binding Path="PasswordBox" UpdateSourceTrigger="LostFocus">
+                            <Binding.ValidationRules>
+                                <pass:PasswordValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:PasswordBoxAssist.Password>
+                </PasswordBox>
+
+                <Button
+                    Margin="20"
+                    materialDesign:ButtonAssist.CornerRadius="10"
+                    Command="{Binding SubmitCommand}"
+                    Content="Đăng Kí"
+                    IsDefault="True"
+                    Style="{StaticResource MaterialDesignRaisedButton}" />
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button
+                    MaxWidth="200"
+                    Background="Transparent"
+                    Command="{Binding MoveLoginCommand}"
+                    Content="Quên mật khẩu"
+                        Margin="0 0 20 0"
+                    Foreground="Black" />
+
+                    <Button
+                    MaxWidth="200"
+                    Background="Transparent"
+                    Command="{Binding MoveLoginCommand}"
+                    Content="Chuyển qua đăng nhập"
+                    Foreground="Black" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <Grid VerticalAlignment="Center">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Visible" />
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,0,0,10"
+                HorizontalAlignment="Center"
+                Text="Đang tải tài nguyên ..." />
+            <ProgressBar
+                Margin="0,20,0,0"
+                IsIndeterminate="{Binding IsLoadingData}"
+                Style="{StaticResource MaterialDesignCircularProgressBar}"
+                Value="50" />
+        </Grid>
     </Grid>
 </UserControl>

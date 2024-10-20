@@ -30,16 +30,44 @@ namespace NaviatePage.Services
             _client = new FirebaseAuthClient(config);
         }
 
-        public async Task<string> RegisterUser(string email, string password)
+        public async Task<string> RegisterUser(string email, string password, string displayName = null)
         {
-            var auth = await _client.CreateUserWithEmailAndPasswordAsync(email, password);
-            return auth.User.Uid;
+            try
+            {
+                var auth = await _client.CreateUserWithEmailAndPasswordAsync(email, password, displayName);
+
+                return auth.User.Uid; // Trả về UID khi đăng ký thành công
+            }
+            catch (FirebaseAuthException ex)
+            {
+                return string.Empty;
+            }
         }
 
         public async Task<string> LoginUser(string email, string password)
         {
-            var auth = await _client.SignInWithEmailAndPasswordAsync(email, password);
-            return auth.User.Uid;
+            try
+            {
+                var auth = await _client.SignInWithEmailAndPasswordAsync(email, password);
+                return auth.User.Uid;
+            }
+            catch (FirebaseAuthException ex)
+            {
+                return string.Empty;
+            }
+        }
+
+        public async Task<bool> ResetPassword(string email)
+        {
+            try
+            {
+                await _client.ResetEmailPasswordAsync(email);
+                return true;
+            }
+            catch (FirebaseAuthException ex)
+            {
+                return false;
+            }
         }
     }
 }
