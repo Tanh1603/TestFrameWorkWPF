@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Firebase.Auth;
+using Firebase.Auth.Requests;
 using Microsoft.Extensions.DependencyInjection;
 using NaviatePage.Services;
 using NaviatePage.Stores;
@@ -24,7 +26,13 @@ namespace NaviatePage.ViewModels
         private string _passwordBox;
 
         [ObservableProperty]
+        private string _resetEmail;
+
+        [ObservableProperty]
         private bool _isLoadingData;
+
+        [ObservableProperty]
+        private bool _isResetPassword;
 
         public LoginViewModel(IServiceProvider serviceProvider)
         {
@@ -65,6 +73,38 @@ namespace NaviatePage.ViewModels
         private async void MoveRegister()
         {
             _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<RegisterViewModel>();
+        }
+
+        [RelayCommand]
+        private async void OpenResetPassword()
+        {
+            IsResetPassword = true;
+        }
+
+        [RelayCommand]
+        private void CloseResetPassword() => IsResetPassword = false;
+
+        [RelayCommand]
+        private async void SubmitResetPassword()
+        {
+            try
+            {
+                IsLoadingData = true;
+                bool isSuccess = await _serviceProvider.GetRequiredService<FirebaseAuthService>().ResetPassword(ResetEmail);
+                IsLoadingData = false;
+                if (isSuccess)
+                {
+                    MessageBox.Show("Thay đổi mật khẩu thành công");
+                }
+                else
+                {
+                    MessageBox.Show("Email không tồn tại");
+                }
+            }
+            catch (FirebaseAuthException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

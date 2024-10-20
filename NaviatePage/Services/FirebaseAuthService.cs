@@ -49,6 +49,7 @@ namespace NaviatePage.Services
             try
             {
                 var auth = await _client.SignInWithEmailAndPasswordAsync(email, password);
+
                 return auth.User.Uid;
             }
             catch (FirebaseAuthException ex)
@@ -67,6 +68,30 @@ namespace NaviatePage.Services
             catch (FirebaseAuthException ex)
             {
                 return false;
+            }
+        }
+
+        public void SignOut()
+        {
+            try
+            {
+                _client.SignOut();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public string GetDisplayName()
+        {
+            try
+            {
+                return _client.User.Info.DisplayName;
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }

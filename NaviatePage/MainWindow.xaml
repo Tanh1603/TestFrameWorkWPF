@@ -15,6 +15,7 @@
     AllowsTransparency="True"
     Background="Transparent"
     WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
     WindowStyle="None"
     mc:Ignorable="d">
 

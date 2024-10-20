@@ -48,7 +48,8 @@
                     Margin="20"
                     materialDesign:HintAssist.Hint="Mật khẩu"
                     materialDesign:TextFieldAssist.HasClearButton="True"
-                    Style="{StaticResource MaterialDesignOutlinedPasswordBox}">
+                    IsEnabled="True"
+                    Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}">
                     <materialDesign:PasswordBoxAssist.Password>
                         <Binding Path="PasswordBox" UpdateSourceTrigger="LostFocus">
                             <Binding.ValidationRules>
@@ -66,12 +67,22 @@
                     <TextBlock Text="Đăng nhập" />
                 </Button>
 
-                <Button
-                    MaxWidth="200"
-                    Background="Transparent"
-                    Command="{Binding MoveRegisterCommand}"
-                    Content="Chuyển qua đăng kí"
-                    Foreground="Black" />
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Button
+                        MaxWidth="200"
+                        Margin="0,0,20,0"
+                        Background="Transparent"
+                        Command="{Binding OpenResetPasswordCommand}"
+                        Content="Quên mật khẩu"
+                        Foreground="Black" />
+
+                    <Button
+                        MaxWidth="200"
+                        Background="Transparent"
+                        Command="{Binding MoveRegisterCommand}"
+                        Content="Chuyển qua đăng kí"
+                        Foreground="Black" />
+                </StackPanel>
             </StackPanel>
         </Grid>
 
@@ -103,7 +114,50 @@
                 Margin="0,20,0,0"
                 IsIndeterminate="{Binding IsLoadingData}"
                 Style="{StaticResource MaterialDesignCircularProgressBar}"
+                FontSize="24"
+                Height="50"
+                Width="50"
                 Value="50" />
+        </Grid>
+
+        <Grid>
+            <materialDesign:DialogHost
+                DialogTheme="Inherit"
+                IsOpen="{Binding IsResetPassword}"
+                OverlayBackground="{DynamicResource PrimaryHueDarkBrush}"
+                Placement="Mouse"
+                CloseOnClickAway="True"
+                Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+
+                <materialDesign:DialogHost.DialogContent>
+                    <StackPanel MinWidth="400">
+                        <Button Background="OrangeRed" HorizontalAlignment="Right" Command="{Binding CloseResetPasswordCommand}">
+                            <materialDesign:PackIcon Kind="Close" />
+                        </Button>
+
+                        <TextBox
+                        Margin="20"
+                        materialDesign:HintAssist.Hint="Email"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                            <TextBox.Text>
+                                <Binding Path="ResetEmail" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <pass:EmailValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+
+                        <Button
+                        MaxWidth="200"
+                        Background="Transparent"
+                        Command="{Binding SubmitResetPasswordCommand}"
+                        Content="Xác nhận"
+                            Margin="20"
+                        Foreground="Black" />
+                    </StackPanel>
+                </materialDesign:DialogHost.DialogContent>
+            </materialDesign:DialogHost>
         </Grid>
     </Grid>
 </UserControl>
