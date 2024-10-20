@@ -19,31 +19,52 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <materialDesign:Card Grid.Column="0">
-            <TabControl
-                Background="Transparent"
-                Style="{StaticResource MaterialDesignFilledTabControl}"
-                TabStripPlacement="Left">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" CommandParameter="{Binding SelectedItem.Header, RelativeSource={RelativeSource AncestorType=TabControl}}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                <StackPanel Grid.Row="0">
+                    <StackPanel Background="Wheat">
+                        <materialDesign:PackIcon Kind="Account"  Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <TextBlock HorizontalAlignment="Center"
+                                   Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
+                                   VerticalAlignment="Center" FontSize="20" />
+                    </StackPanel>
+                    <Button Command="{Binding LogoutCountCommand}" Background="Gray">
+                        Logout
+                    </Button>
+                </StackPanel>
 
-                <TabItem Header="Home" />
+                <TabControl
+                    Grid.Row="1"
+                    Background="Transparent"
+                    SelectedIndex="{Binding SelectedIndexTabControl}"
+                    Style="{StaticResource MaterialDesignFilledTabControl}"
+                    TabStripPlacement="Left">
 
-                <TabItem Header="Customer" />
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" CommandParameter="{Binding SelectedItem.Header, RelativeSource={RelativeSource AncestorType=TabControl}}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
-                <TabItem Header="Order" />
+                    <TabItem Header="Home" />
 
-                <TabItem Header="Transaction" />
+                    <TabItem Header="Customer" />
 
-                <TabItem Header="Shipment" />
+                    <TabItem Header="Order" />
 
-                <TabItem Header="Setting" />
+                    <TabItem Header="Transaction" />
 
-                <TabItem Header="Product" />
-            </TabControl>
+                    <TabItem Header="Shipment" />
+
+                    <TabItem Header="Setting" />
+
+                    <TabItem Header="Product" />
+                </TabControl>
+            </Grid>
         </materialDesign:Card>
 
         <Grid Grid.Column="1" Background="Transparent">

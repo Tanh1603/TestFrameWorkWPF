@@ -16,7 +16,7 @@
             </Border.Background>
         </Border>-->
 
-        <ListView ItemsSource="{Binding Items1}">
+        <ListView>
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Code}" Header="Code" />
