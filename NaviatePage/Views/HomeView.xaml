@@ -12,26 +12,6 @@
     mc:Ignorable="d">
 
     <Grid Background="White">
-        <materialDesign:DialogHost
-            VerticalAlignment="Stretch"
-            CloseOnClickAway="False"
-            DialogContent="{Binding Sample4Content}"
-            DialogTheme="Inherit"
-            IsOpen="{Binding IsSample4DialogOpen}"
-            OverlayBackground="{DynamicResource PrimaryHueDarkBrush}"
-            Placement="Mouse">
-            <Border
-                MinWidth="256"
-                MinHeight="256"
-                BorderBrush="{DynamicResource PrimaryHueMidBrush}"
-                BorderThickness="1"
-                ClipToBounds="True">
-                <Button
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Command="{Binding OpenSample4DialogCommand}"
-                    Content="RUN" />
-            </Border>
-        </materialDesign:DialogHost>
+        <TextBlock FontSize="50" Text="{Binding Message}" />
     </Grid>
 </UserControl>

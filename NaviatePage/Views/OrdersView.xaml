@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NaviatePage.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:NaviatePage.ViewModels"
     d:DesignHeight="450"
@@ -11,10 +12,115 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Border>
-            <Border.Background>
-                <ImageBrush ImageSource="C:\Users\tuana\OneDrive\HK3\C#\WPF\NavigatePage\NaviatePage\NaviatePage\Images\order_page.png" Stretch="UniformToFill" />
-            </Border.Background>
-        </Border>
+        <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="False">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Background="Wheat">
+                <TextBox
+                VerticalAlignment="Top"
+                Text="{Binding DisplayName}"
+                materialDesign:HintAssist.Hint="Display name"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                </TextBox>
+                <TextBox
+                VerticalAlignment="Top"
+                materialDesign:HintAssist.Hint="Price"
+                Text="{Binding Price}"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                </TextBox>
+
+                <TextBox
+                VerticalAlignment="Top"
+                Text="{Binding Discount}"
+                materialDesign:HintAssist.Hint="Discount"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                </TextBox>
+                <Button
+                Margin="20"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Command="{Binding SelectImageCommand}"
+                Content="Lựa chọn ảnh thêm vào" />
+                <Image Source="{Binding ImagePath}" Width="100" Height="50" Margin="10" />
+                <Button
+                Margin="20"
+                Content="Thêm"
+                Command="{Binding AddNewFoodCommand}" />
+            </StackPanel>
+
+            <ListBox
+            MinWidth="100"
+            Grid.Row="1"
+            ItemsSource="{Binding FoodList}"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            SelectedItem="{Binding SelectedFood}">
+
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="10">
+                            <Image Source="{Binding Imagepath}" Stretch="Uniform" Width="300" Height="200" />
+                            <TextBlock Text="{Binding Displayname}" />
+                            <TextBlock Text="{Binding Price}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <Grid VerticalAlignment="Center">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Visible" />
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLoadingData}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,0,0,10"
+                HorizontalAlignment="Center"
+                Text="Đang tải tài nguyên ..." />
+            <ProgressBar
+                Margin="0,20,0,0"
+                IsIndeterminate="{Binding IsLoadingData}"
+                Style="{StaticResource MaterialDesignCircularProgressBar}"
+                FontSize="24"
+                Height="50"
+                Width="50"
+                Value="50" />
+        </Grid>
     </Grid>
 </UserControl>

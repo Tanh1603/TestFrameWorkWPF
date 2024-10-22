@@ -27,13 +27,19 @@
 
                 <StackPanel Grid.Row="0">
                     <StackPanel Background="Wheat">
-                        <materialDesign:PackIcon Kind="Account"  Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" />
+
+                        <Image Source="{Binding SelectedImage, UpdateSourceTrigger=PropertyChanged}" Height="50" Width="50" HorizontalAlignment="Center" />
+                        <!--<materialDesign:PackIcon Kind="Account"  Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
+
                         <TextBlock HorizontalAlignment="Center"
                                    Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
                                    VerticalAlignment="Center" FontSize="20" />
                     </StackPanel>
                     <Button Command="{Binding LogoutCountCommand}" Background="Gray">
                         Logout
+                    </Button>
+                    <Button Command="{Binding ChangeImageCommand}" Background="BlueViolet">
+                        Đổi ảnh
                     </Button>
                 </StackPanel>
 

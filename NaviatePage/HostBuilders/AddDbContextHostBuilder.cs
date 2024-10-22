@@ -26,6 +26,10 @@ namespace NaviatePage.HostBuilders
                 string firebaseAPIKey = context.Configuration.GetValue<string>("FIREBASE_API_KEY");
 
                 services.AddSingleton(new FirebaseAuthService(firebaseAPIKey));
+
+                string firebaseKey = context.Configuration.GetValue<string>("FIREBASE_STORAGE");
+                string firebaseStoreUrl = context.Configuration.GetValue<String>("FIREBASE_STORAGE_URL");
+                services.AddSingleton(new FirebaseStorageService(firebaseStoreUrl, firebaseKey));
             });
             return hostBuilder;
         }

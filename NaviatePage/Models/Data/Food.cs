@@ -5,17 +5,15 @@ using System.Collections.Generic;
 
 namespace NaviatePage.Models.Data;
 
-public partial class User
+public partial class Food
 {
-    public int Iduser { get; set; }
+    public int Foodid { get; set; }
 
     public string Displayname { get; set; }
 
-    public string Username { get; set; }
+    public decimal Price { get; set; }
 
-    public string Password { get; set; }
+    public decimal? Discount { get; set; }
 
-    public int Iduserrole { get; set; }
-
-    public virtual Userrole IduserroleNavigation { get; set; }
+    public string Imagepath { get; set; }
 }

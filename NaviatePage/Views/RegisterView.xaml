@@ -36,7 +36,7 @@
                     materialDesign:HintAssist.Hint="Tên đăng nhập"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}">
                     <TextBox.Text>
-                        <Binding Path="UserName" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="UserName" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                             <Binding.ValidationRules>
                                 <pass:NotEmptyValidationRule />
                             </Binding.ValidationRules>
@@ -49,7 +49,7 @@
                     materialDesign:HintAssist.Hint="Email"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}">
                     <TextBox.Text>
-                        <Binding Path="EmailTextBox" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="EmailTextBox" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                             <Binding.ValidationRules>
                                 <pass:EmailValidationRule />
                             </Binding.ValidationRules>
@@ -63,7 +63,7 @@
                     materialDesign:TextFieldAssist.HasClearButton="True"
                     Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}">
                     <materialDesign:PasswordBoxAssist.Password>
-                        <Binding Path="PasswordBox" UpdateSourceTrigger="LostFocus">
+                        <Binding Path="PasswordBox" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                             <Binding.ValidationRules>
                                 <pass:PasswordValidationRule />
                             </Binding.ValidationRules>
@@ -74,7 +74,7 @@
                 <Button
                     Margin="20"
                     materialDesign:ButtonAssist.CornerRadius="10"
-                    Command="{Binding SubmitCommand}"
+                    Command="{Binding OpenSubmitCommand}"
                     Content="Đăng Kí"
                     IsDefault="True"
                     Style="{StaticResource MaterialDesignRaisedButton}" />
@@ -115,8 +115,51 @@
             <ProgressBar
                 Margin="0,20,0,0"
                 IsIndeterminate="{Binding IsLoadingData}"
+                Width="50"
+                Height="50"
                 Style="{StaticResource MaterialDesignCircularProgressBar}"
                 Value="50" />
+        </Grid>
+
+        <Grid>
+            <materialDesign:DialogHost
+                DialogTheme="Inherit"
+                IsOpen="{Binding IsSubmitCode}"
+                OverlayBackground="{DynamicResource PrimaryHueDarkBrush}"
+                Placement="Mouse"
+                CloseOnClickAway="True"
+                Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+
+                <materialDesign:DialogHost.DialogContent>
+                    <StackPanel MinWidth="400">
+                        <Button Background="OrangeRed" HorizontalAlignment="Right" Command="{Binding CloseCommand}">
+                            <materialDesign:PackIcon Kind="Close" />
+                        </Button>
+
+                        <TextBox
+                        Margin="20"
+                        materialDesign:HintAssist.Hint="Mã xác thực"
+                            Text="{Binding VerificationCode, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                            <!--<TextBox.Text>
+                                <Binding Path="ResetEmail" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <pass:EmailValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>-->
+                        </TextBox>
+
+                        <Button
+                        MaxWidth="200"
+                        Background="Transparent"
+                        Command="{Binding SubmitVerificationCodeCommand}"
+                        Content="Xác nhận"
+                            Margin="20"
+                        Foreground="Black" />
+                    </StackPanel>
+                </materialDesign:DialogHost.DialogContent>
+            </materialDesign:DialogHost>
         </Grid>
     </Grid>
 </UserControl>

@@ -11,19 +11,11 @@ namespace NaviatePage.ViewModels
     public partial class HomViewModel : ObservableObject
     {
         [ObservableProperty]
-        private bool _isSample4DialogOpen;
+        private string _message;
 
-        [ObservableProperty]
-        private string _sample4Content;
-
-        [RelayCommand]
-        private void OpenSample4Dialog()
+        public HomViewModel()
         {
-            IsSample4DialogOpen = true;
-        }
-
-        private void CloseSample4Dialog()
-        {
+            Message = "Hello word";
         }
     }
 }

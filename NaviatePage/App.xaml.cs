@@ -40,10 +40,10 @@ namespace NaviatePage
         {
             _host.Start();
             QuanLyKhoContextFactory quanLyKhoContextFactory = _host.Services.GetService<QuanLyKhoContextFactory>();
-            //using (QuanLyKhoContext quanLyKho = quanLyKhoContextFactory.CreateDbContext())
-            //{
-            //    quanLyKho.Database.Migrate();
-            //};
+            using (QuanLyKhoContext quanLyKho = quanLyKhoContextFactory.CreateDbContext())
+            {
+                //quanLyKho.Database.Migrate();
+            };
             Window window = _host.Services.GetRequiredService<MainWindow>();
             var user = _host.Services.GetRequiredService<FirebaseAuthService>();
 

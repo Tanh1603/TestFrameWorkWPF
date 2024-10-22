@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using NaviatePage.Components;
 using NaviatePage.Models;
 using NaviatePage.Models.Data;
+using NaviatePage.Services;
 using NaviatePage.Stores;
 using NaviatePage.ViewModel;
 using NaviatePage.ViewModels;
@@ -22,7 +23,7 @@ namespace NaviatePage.HostBuilders
             hostBuilder.ConfigureServices(services =>
             {
                 services.AddTransient<HomViewModel>();
-                services.AddTransient<OrderViewModel>();
+                services.AddTransient<OrderViewModel>(provider => new OrderViewModel(provider));
                 services.AddTransient<ProductViewModel>();
                 services.AddTransient<SettingViewModel>();
                 services.AddTransient<ShipmentViewModel>();
@@ -38,8 +39,11 @@ namespace NaviatePage.HostBuilders
                 services.AddTransient<RegisterViewModel>(s => new RegisterViewModel(s));
                 services.AddTransient<NavigateViewModel>(s => new NavigateViewModel(s));
 
-                services.AddSingleton<IDataService<Customer>, GenericDataService<Customer>>();
                 services.AddSingleton<MainWindow>(provider => new MainWindow(provider.GetRequiredService<MainViewModel>()));
+                services.AddSingleton<IDataService<Customer>, GenericDataService<Customer>>();
+                services.AddSingleton<IDataService<Food>, GenericDataService<Food>>();
+
+                services.AddSingleton<IFileDialogService, FileDialogService>();
             });
 
             return hostBuilder;

@@ -6,9 +6,11 @@ using NaviatePage.Services;
 using NaviatePage.Stores;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace NaviatePage.ViewModels
 {
@@ -28,13 +30,16 @@ namespace NaviatePage.ViewModels
         [ObservableProperty]
         private int _selectedIndexTabControl;
 
+        [ObservableProperty]
+        private BitmapImage _selectedImage;
+
         public NavigateViewModel(IServiceProvider provider)
         {
             _serviceProvider = provider;
             _navigationStore = _serviceProvider.GetRequiredService<NavigationStore>();
             UserName = _serviceProvider.GetRequiredService<FirebaseAuthService>().GetDisplayName() ?? "Unknow User";
-            CurrentViewModel = _serviceProvider.GetRequiredService<CustomerViewModel>();
-            SelectedIndexTabControl = 1;
+            CurrentViewModel = _serviceProvider.GetRequiredService<HomViewModel>();
+            SelectedIndexTabControl = 0;
         }
 
         [RelayCommand]
@@ -81,6 +86,18 @@ namespace NaviatePage.ViewModels
         {
             _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<LoginViewModel>();
             _serviceProvider.GetRequiredService<FirebaseAuthService>().SignOut();
+        }
+
+        [RelayCommand]
+        private void ChangeImage()
+        {
+            string filter = "Image files (*.png;*.jpg;*.jpeg;*.bmp)|*.png;*.jpg;*.jpeg;*.bmp|All files (*.*)|*.*";
+            var filePath = _serviceProvider.GetRequiredService<IFileDialogService>().OpenFileDialog(filter);
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                SelectedImage = new BitmapImage(new Uri(filePath)); // Cập nhật hình ảnh đã chọn
+            }
         }
     }
 }

@@ -16,6 +16,8 @@ public partial class QuanLyKhoContext : DbContext
 
     public virtual DbSet<Customer> Customers { get; set; }
 
+    public virtual DbSet<Food> Foods { get; set; }
+
     public virtual DbSet<Input> Inputs { get; set; }
 
     public virtual DbSet<Inputinfo> Inputinfos { get; set; }
@@ -55,6 +57,28 @@ public partial class QuanLyKhoContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)
                 .HasColumnName("phone");
+        });
+
+        modelBuilder.Entity<Food>(entity =>
+        {
+            entity.HasKey(e => e.Foodid).HasName("food_pkey");
+
+            entity.ToTable("food");
+
+            entity.Property(e => e.Foodid).HasColumnName("foodid");
+            entity.Property(e => e.Discount)
+                .HasPrecision(5, 2)
+                .HasColumnName("discount");
+            entity.Property(e => e.Displayname)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("displayname");
+            entity.Property(e => e.Imagepath)
+                .HasMaxLength(255)
+                .HasColumnName("imagepath");
+            entity.Property(e => e.Price)
+                .HasPrecision(10, 2)
+                .HasColumnName("price");
         });
 
         modelBuilder.Entity<Input>(entity =>
@@ -222,10 +246,6 @@ public partial class QuanLyKhoContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(100)
                 .HasColumnName("username");
-            entity.Property(e => e.Email)
-                    .IsRequired() // Có thể thiết lập là bắt buộc hay không
-                    .HasMaxLength(255) // Thiết lập độ dài tối đa
-                    .HasColumnName("email"); // Tên cột trong cơ sở dữ liệu
 
             entity.HasOne(d => d.IduserroleNavigation).WithMany(p => p.Users)
                 .HasForeignKey(d => d.Iduserrole)
