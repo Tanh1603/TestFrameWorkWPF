@@ -9,6 +9,7 @@ using NaviatePage.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -44,6 +45,9 @@ namespace NaviatePage.ViewModels
         [ObservableProperty]
         private bool _isLoadingData;
 
+        [ObservableProperty]
+        private bool _isOpenAddOrders;
+
         public OrderViewModel(IServiceProvider provider)
         {
             _serviceProvider = provider;
@@ -61,6 +65,7 @@ namespace NaviatePage.ViewModels
         [RelayCommand(CanExecute = nameof(AddNewFoodCanexcute))]
         private async Task AddNewFood()
         {
+            IsOpenAddOrders = false;
             IsLoadingData = true;
             string res = await _serviceProvider.GetRequiredService<FirebaseStorageService>().UploadFileAsync(ImagePath.ToString());
 
@@ -73,6 +78,12 @@ namespace NaviatePage.ViewModels
             };
             await _serviceProvider.GetRequiredService<IDataService<Food>>().Create(newCustomer);
             FoodList.Add(newCustomer);
+
+            DisplayName = null;
+            Price = null;
+            Discount = null;
+            ImagePath = null;
+
             IsLoadingData = false;
         }
 
@@ -91,6 +102,22 @@ namespace NaviatePage.ViewModels
             {
                 ImagePath = new BitmapImage(new Uri(filePath));
             }
+        }
+
+        [RelayCommand]
+        private void OpenAddOrder()
+        {
+            IsOpenAddOrders = true;
+        }
+
+        [RelayCommand]
+        private void CloseAddOrder()
+        {
+            DisplayName = null;
+            Price = null;
+            Discount = null;
+            ImagePath = null;
+            IsOpenAddOrders = false;
         }
     }
 }

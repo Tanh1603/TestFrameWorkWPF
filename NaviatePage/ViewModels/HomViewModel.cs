@@ -10,12 +10,8 @@ namespace NaviatePage.ViewModels
 {
     public partial class HomViewModel : ObservableObject
     {
-        [ObservableProperty]
-        private string _message;
-
         public HomViewModel()
         {
-            Message = "Hello word";
         }
     }
 }

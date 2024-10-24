@@ -12,6 +12,6 @@
     mc:Ignorable="d">
 
     <Grid Background="White">
-        <TextBlock FontSize="50" Text="{Binding Message}" />
+        <TextBlock FontSize="50" Text="Hello World " VerticalAlignment="Center" HorizontalAlignment="Center" />
     </Grid>
 </UserControl>

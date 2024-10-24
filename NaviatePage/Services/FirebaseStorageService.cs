@@ -18,15 +18,9 @@ namespace NaviatePage.Services
     {
         private readonly string _firebaseBucket;
 
-        public FirebaseStorageService(string firebaseBucket, string firebaseKey)
+        public FirebaseStorageService(string firebaseBucket)
         {
             _firebaseBucket = firebaseBucket;
-            // Khởi tạo Firebase Admin SDK
-            //FirebaseApp.Create(new AppOptions()
-            //{
-            //    Credential = GoogleCredential.FromJson(firebaseKey),
-            //    ProjectId = "tanh-first-project"
-            //});
         }
 
         public async Task<string> UploadFileAsync(string localFilePath)

@@ -23,13 +23,12 @@ namespace NaviatePage.HostBuilders
                 services.AddDbContext<QuanLyKhoContext>(configureDbContext);
                 services.AddSingleton<QuanLyKhoContextFactory>(new QuanLyKhoContextFactory(configureDbContext));
 
-                string firebaseAPIKey = context.Configuration.GetValue<string>("FIREBASE_API_KEY");
+                string firebaseAPIKey = context.Configuration.GetSection("FireBase")["API_KEY"];
 
                 services.AddSingleton(new FirebaseAuthService(firebaseAPIKey));
 
-                string firebaseKey = context.Configuration.GetValue<string>("FIREBASE_STORAGE");
-                string firebaseStoreUrl = context.Configuration.GetValue<String>("FIREBASE_STORAGE_URL");
-                services.AddSingleton(new FirebaseStorageService(firebaseStoreUrl, firebaseKey));
+                string firebaseStoreBucketl = context.Configuration.GetSection("FireBase")["STORAGE_BUCKET"];
+                services.AddSingleton(new FirebaseStorageService(firebaseStoreBucketl));
             });
             return hostBuilder;
         }

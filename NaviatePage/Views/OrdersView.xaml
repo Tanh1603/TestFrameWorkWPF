@@ -7,6 +7,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:NaviatePage.ViewModels"
+    x:Name="orderuc"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -27,67 +28,93 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Background="Wheat">
-                <TextBox
-                VerticalAlignment="Top"
-                Text="{Binding DisplayName}"
-                materialDesign:HintAssist.Hint="Display name"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}">
-                </TextBox>
-                <TextBox
-                VerticalAlignment="Top"
-                materialDesign:HintAssist.Hint="Price"
-                Text="{Binding Price}"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}">
-                </TextBox>
 
-                <TextBox
-                VerticalAlignment="Top"
-                Text="{Binding Discount}"
-                materialDesign:HintAssist.Hint="Discount"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}">
-                </TextBox>
-                <Button
-                Margin="20"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Command="{Binding SelectImageCommand}"
-                Content="Lựa chọn ảnh thêm vào" />
-                <Image Source="{Binding ImagePath}" Width="100" Height="50" Margin="10" />
-                <Button
-                Margin="20"
-                Content="Thêm"
-                Command="{Binding AddNewFoodCommand}" />
-            </StackPanel>
-
+            <Button Grid.Row="0" Margin="20" Command="{Binding OpenAddOrderCommand}">
+                Thêm
+            </Button>
             <ListBox
-            MinWidth="100"
-            Grid.Row="1"
-            ItemsSource="{Binding FoodList}"
-            ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                AllowDrop="True"
+                ItemsSource="{Binding FoodList}">
 
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel />
+                        <WrapPanel Width="{Binding ActualWidth, ElementName=orderuc}" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
 
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Margin="10">
-                            <Image Source="{Binding Imagepath}" Stretch="Uniform" Width="300" Height="200" />
-                            <TextBlock Text="{Binding Displayname}" />
-                            <TextBlock Text="{Binding Price}" />
+                        <StackPanel Width="300" Margin="10">
+                            <Image
+                                Width="300"
+                                Height="200"
+                                Source="{Binding Imagepath}"
+                                Stretch="Uniform" />
+                            <TextBlock Text="{Binding Displayname}" TextAlignment="Center" />
+                            <TextBlock Text="{Binding Price}" TextAlignment="Center" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
+        <materialDesign:DialogHost
+                DialogTheme="Inherit"
+                IsOpen="{Binding IsOpenAddOrders}"
+                OverlayBackground="{DynamicResource PrimaryHueDarkBrush}"
+                Placement="Mouse"
+
+                Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Grid.Row="0" Background="White" MinWidth="450" Margin="20">
+                    <Button
+                        Background="OrangeRed"
+                        Command="{Binding CloseAddOrderCommand}"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Close" />
+                    </Button>
+
+                    <TextBox
+                            VerticalAlignment="Top"
+                            materialDesign:HintAssist.Hint="Display name"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            Text="{Binding DisplayName}" />
+                    <TextBox
+                            VerticalAlignment="Top"
+                            materialDesign:HintAssist.Hint="Price"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            Text="{Binding Price}" />
+
+                    <TextBox
+                            VerticalAlignment="Top"
+                            materialDesign:HintAssist.Hint="Discount"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            Text="{Binding Discount}" />
+                    <Button
+                            Margin="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Command="{Binding SelectImageCommand}"
+                            Content="Lựa chọn ảnh thêm vào" />
+                    <Image
+                            Width="100"
+                            Height="50"
+                            Margin="10"
+                            Source="{Binding ImagePath}" />
+                    <Button
+                            Margin="20"
+                            Command="{Binding AddNewFoodCommand}"
+                            Content="Xác nhận" />
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
         <Grid VerticalAlignment="Center">
             <Grid.Style>
                 <Style TargetType="Grid">
@@ -113,12 +140,12 @@
                 HorizontalAlignment="Center"
                 Text="Đang tải tài nguyên ..." />
             <ProgressBar
+                Width="50"
+                Height="50"
                 Margin="0,20,0,0"
+                FontSize="24"
                 IsIndeterminate="{Binding IsLoadingData}"
                 Style="{StaticResource MaterialDesignCircularProgressBar}"
-                FontSize="24"
-                Height="50"
-                Width="50"
                 Value="50" />
         </Grid>
     </Grid>

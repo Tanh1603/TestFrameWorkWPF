@@ -14,7 +14,6 @@
     mc:Ignorable="d">
     <Grid Background="White">
         <materialDesign:DialogHost DialogTheme="Inherit" Identifier="RootDialog">
-
             <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
                 <materialDesign:DrawerHost.LeftDrawerContent>
                     <materialDesign:Card Grid.Column="0">
@@ -119,13 +118,11 @@
                     </materialDesign:ColorZone>
 
                     <Grid>
-                        <ContentControl Margin="10" Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+                        <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </DockPanel>
             </materialDesign:DrawerHost>
         </materialDesign:DialogHost>
-
-        <!--  000  -->
         <!--<Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
