@@ -13,68 +13,185 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid Background="White">
+        <materialDesign:DialogHost DialogTheme="Inherit" Identifier="RootDialog">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <materialDesign:Card Grid.Column="0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+                <materialDesign:DrawerHost.LeftDrawerContent>
+                    <materialDesign:Card Grid.Column="0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0">
-                    <StackPanel Background="Wheat">
+                            <StackPanel Grid.Row="0">
+                                <StackPanel Background="Wheat">
+                                    <materialDesign:PackIcon
+                                        Width="50"
+                                        Height="50"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="Account" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <Button Background="Gray" Command="{Binding LogoutCountCommand}">
+                                    Logout
+                                </Button>
+                                <Button Background="BlueViolet" Command="{Binding ChangeImageCommand}">
+                                    Đổi ảnh
+                                </Button>
+                            </StackPanel>
 
-                        <Image Source="{Binding SelectedImage, UpdateSourceTrigger=PropertyChanged}" Height="50" Width="50" HorizontalAlignment="Center" />
-                        <!--<materialDesign:PackIcon Kind="Account"  Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
+                            <TabControl
+                                Grid.Row="1"
+                                Background="Transparent"
+                                SelectedIndex="{Binding SelectedIndexTabControl}"
+                                Style="{StaticResource MaterialDesignFilledTabControl}"
+                                TabStripPlacement="Left">
 
-                        <TextBlock HorizontalAlignment="Center"
-                                   Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
-                                   VerticalAlignment="Center" FontSize="20" />
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" CommandParameter="{Binding SelectedItem.Header, RelativeSource={RelativeSource AncestorType=TabControl}}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                                <TabItem
+                                    MinWidth="200"
+                                    Cursor="Hand"
+                                    Header="Home" />
+                                <TabItem
+                                    MinWidth="200"
+                                    Cursor="Hand"
+                                    Header="Customer" />
+                                <TabItem
+                                    MinWidth="200"
+                                    Cursor="Hand"
+                                    Header="Order" />
+                                <TabItem
+                                    MinWidth="200"
+                                    Cursor="Hand"
+                                    Header="Transaction" />
+                                <TabItem
+                                    MinWidth="200"
+                                    Cursor="Hand"
+                                    Header="Shipment" />
+                                <TabItem
+                                    MinWidth="200"
+                                    Cursor="Hand"
+                                    Header="Setting" />
+                                <TabItem
+                                    MinWidth="200"
+                                    Cursor="Hand"
+                                    Header="Product" />
+                            </TabControl>
+                        </Grid>
+                    </materialDesign:Card>
+                </materialDesign:DrawerHost.LeftDrawerContent>
+
+                <DockPanel>
+                    <materialDesign:ColorZone
+                        Padding="10,0"
+                        materialDesign:ElevationAssist.Elevation="Dp4"
+                        DockPanel.Dock="Top"
+                        Mode="PrimaryMid">
+                        <DockPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ToggleButton
+                                    x:Name="MenuToggleButton"
+                                    AutomationProperties.Name="HamburgerToggleButton"
+                                    Command="{Binding MenuToggleButtonOpenCommand}"
+                                    Cursor="Hand"
+                                    IsChecked="{Binding IsLeftDrawerOpen}"
+                                    Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                            </StackPanel>
+
+                            <TextBlock
+                                Margin="-152,0,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="22"
+                                Text="Demo một số chức năng của app quản lí quán cafe" />
+                        </DockPanel>
+                    </materialDesign:ColorZone>
+
+                    <Grid>
+                        <ContentControl Margin="10" Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </DockPanel>
+            </materialDesign:DrawerHost>
+        </materialDesign:DialogHost>
+
+        <!--  000  -->
+        <!--<Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <materialDesign:Card Grid.Column="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0">
+                        <StackPanel Background="Wheat">
+                            <materialDesign:PackIcon
+                                Width="50"
+                                Height="50"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Kind="Account" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <Button Background="Gray" Command="{Binding LogoutCountCommand}">
+                            Logout
+                        </Button>
+                        <Button Background="BlueViolet" Command="{Binding ChangeImageCommand}">
+                            Đổi ảnh
+                        </Button>
                     </StackPanel>
-                    <Button Command="{Binding LogoutCountCommand}" Background="Gray">
-                        Logout
-                    </Button>
-                    <Button Command="{Binding ChangeImageCommand}" Background="BlueViolet">
-                        Đổi ảnh
-                    </Button>
-                </StackPanel>
 
-                <TabControl
-                    Grid.Row="1"
-                    Background="Transparent"
-                    SelectedIndex="{Binding SelectedIndexTabControl}"
-                    Style="{StaticResource MaterialDesignFilledTabControl}"
-                    TabStripPlacement="Left">
+                    <TabControl
+                        Grid.Row="1"
+                        Background="Transparent"
+                        SelectedIndex="{Binding SelectedIndexTabControl}"
+                        Style="{StaticResource MaterialDesignFilledTabControl}"
+                        TabStripPlacement="Left">
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" CommandParameter="{Binding SelectedItem.Header, RelativeSource={RelativeSource AncestorType=TabControl}}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" CommandParameter="{Binding SelectedItem.Header, RelativeSource={RelativeSource AncestorType=TabControl}}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
 
-                    <TabItem Header="Home" />
+                        <TabItem Header="Home" />
 
-                    <TabItem Header="Customer" />
+                        <TabItem Header="Customer" />
 
-                    <TabItem Header="Order" />
+                        <TabItem Header="Order" />
 
-                    <TabItem Header="Transaction" />
+                        <TabItem Header="Transaction" />
 
-                    <TabItem Header="Shipment" />
+                        <TabItem Header="Shipment" />
 
-                    <TabItem Header="Setting" />
+                        <TabItem Header="Setting" />
 
-                    <TabItem Header="Product" />
-                </TabControl>
+                        <TabItem Header="Product" />
+                    </TabControl>
+                </Grid>
+            </materialDesign:Card>
+            <Grid Grid.Column="1" Background="Transparent">
+                <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
-        </materialDesign:Card>
-
-        <Grid Grid.Column="1" Background="Transparent">
-            <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
-        </Grid>
+        </Grid>-->
     </Grid>
 </UserControl>

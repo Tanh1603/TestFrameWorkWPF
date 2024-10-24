@@ -10,10 +10,5 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <Border>
-            <Border.Background>
-                <ImageBrush ImageSource="C:\Users\tuana\OneDrive\HK3\C#\WPF\NavigatePage\NaviatePage\NaviatePage\Images\setting_page.png" Stretch="UniformToFill" />
-            </Border.Background>
-        </Border>
     </Grid>
 </UserControl>

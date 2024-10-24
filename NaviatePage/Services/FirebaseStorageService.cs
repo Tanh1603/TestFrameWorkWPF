@@ -22,11 +22,11 @@ namespace NaviatePage.Services
         {
             _firebaseBucket = firebaseBucket;
             // Khởi tạo Firebase Admin SDK
-            FirebaseApp.Create(new AppOptions()
-            {
-                Credential = GoogleCredential.FromJson(firebaseKey),
-                ProjectId = "tanh-first-project"
-            });
+            //FirebaseApp.Create(new AppOptions()
+            //{
+            //    Credential = GoogleCredential.FromJson(firebaseKey),
+            //    ProjectId = "tanh-first-project"
+            //});
         }
 
         public async Task<string> UploadFileAsync(string localFilePath)

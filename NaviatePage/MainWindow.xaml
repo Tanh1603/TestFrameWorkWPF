@@ -18,16 +18,18 @@
     WindowState="Maximized"
     WindowStyle="None"
     mc:Ignorable="d">
-
-    <Grid Margin="0,5,0,0">
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <materialDesign:ColorZone Grid.Row="0" Mode="PrimaryLight">
-            <DockPanel>
-                <ToggleButton Margin="10,0,0,0" Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+    <materialDesign:Card UniformCornerRadius="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0" Background="White">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <i:InvokeCommandAction Command="{Binding DragSizeWindowCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Height="40" Command="{Binding MiniMizeWindowCommand}">
                         <materialDesign:PackIcon Kind="WindowMinimize" />
@@ -36,19 +38,18 @@
                         <materialDesign:PackIcon Kind="WindowMaximize" />
                     </Button>
                     <Button
-                        Height="40"
-                        Background="OrangeRed"
-                        Command="{Binding CloseWindowCommand}"
-                        Cursor="Hand">
+                    Height="40"
+                    Background="OrangeRed"
+                    Command="{Binding CloseWindowCommand}"
+                    Cursor="Hand">
                         <materialDesign:PackIcon Kind="CloseThick" />
                     </Button>
                 </StackPanel>
             </DockPanel>
-        </materialDesign:ColorZone>
-        <Grid Grid.Row="1">
-            <Grid>
+
+            <Grid Grid.Row="1">
                 <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </Grid>
-    </Grid>
+    </materialDesign:Card>
 </Window>

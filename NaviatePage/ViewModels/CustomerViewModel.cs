@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Office.Interop.Excel;
 using NaviatePage.Components;
 using NaviatePage.Models;
 using NaviatePage.Models.Data;
@@ -472,5 +473,42 @@ namespace NaviatePage.ViewModels
         }
 
         #endregion Chức năng sắp xếp tăng giảm dần theo danh mục
+
+        // Chức năng xuất file excel
+        [RelayCommand]
+        private void ExportExcelFile()
+        {
+            try
+            {
+                Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
+                excelApp.Visible = true;
+                Workbook workbook = excelApp.Workbooks.Add(Type.Missing);
+                Worksheet worksheet = (Worksheet)workbook.Sheets[1];
+
+                worksheet.Cells[1, 1] = "Id";
+                worksheet.Cells[1, 2] = "Display Name";
+                worksheet.Cells[1, 3] = "Address";
+                worksheet.Cells[1, 4] = "Phone";
+                worksheet.Cells[1, 5] = "Email";
+                worksheet.Cells[1, 6] = "More Info";
+                worksheet.Cells[1, 7] = "Contract Date";
+
+                for (int i = 0; i < CustomerList.Count; i++)
+                {
+                    var customer = CustomerList[i];
+                    worksheet.Cells[i + 2, 1] = customer.Idcustomer;
+                    worksheet.Cells[i + 2, 2] = customer.Displayname;
+                    worksheet.Cells[i + 2, 3] = customer.Address;
+                    worksheet.Cells[i + 2, 4] = customer.Phone;
+                    worksheet.Cells[i + 2, 5] = customer.Email;
+                    worksheet.Cells[i + 2, 6] = customer.Moreinfo;
+                    worksheet.Cells[i + 2, 7] = customer.Contractdate;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

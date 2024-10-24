@@ -33,6 +33,9 @@ namespace NaviatePage.ViewModels
         [ObservableProperty]
         private BitmapImage _selectedImage;
 
+        [ObservableProperty]
+        private bool _isLeftDrawerOpen;
+
         public NavigateViewModel(IServiceProvider provider)
         {
             _serviceProvider = provider;
@@ -79,6 +82,8 @@ namespace NaviatePage.ViewModels
                     CurrentViewModel = _serviceProvider.GetRequiredService<HomViewModel>();
                     break;
             }
+
+            IsLeftDrawerOpen = false;
         }
 
         [RelayCommand]
@@ -96,8 +101,14 @@ namespace NaviatePage.ViewModels
 
             if (!string.IsNullOrEmpty(filePath))
             {
-                SelectedImage = new BitmapImage(new Uri(filePath)); // Cập nhật hình ảnh đã chọn
+                SelectedImage = new BitmapImage(new Uri(filePath));
             }
+        }
+
+        [RelayCommand]
+        private void MenuToggleButtonOpen()
+        {
+            IsLeftDrawerOpen = true;
         }
     }
 }

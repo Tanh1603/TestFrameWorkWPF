@@ -16,7 +16,7 @@
         <Grid Margin="20">
             <Grid.Style>
                 <Style TargetType="Grid">
-                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Setter Property="Visibility" Value="Visible" />
                     <!--  Mặc định là ẩn  -->
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsLoadingData}" Value="True">
@@ -38,8 +38,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="20">
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-
+                    <WrapPanel HorizontalAlignment="Center" AllowDrop="True">
                         <TextBox
                             MinWidth="400"
                             Margin="20,0,20,0"
@@ -47,14 +46,6 @@
                             materialDesign:HintAssist.Hint="Tìm kiếm"
                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
                             Text="{Binding InputSearch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-
-                        <Button
-                            Width="100"
-                            materialDesign:ButtonAssist.CornerRadius="10"
-                            Style="{StaticResource MaterialDesignRaisedButton}"
-                            ToolTip="MaterialDesignRaisedButton with Round Corners">
-                            <TextBlock Text="Sắp xếp" />
-                        </Button>
 
                         <ComboBox
                             Margin="10,0"
@@ -91,66 +82,71 @@
                             ToolTip="MaterialDesignRaisedButton with Round Corners">
                             <TextBlock Text="Thêm" />
                         </Button>
-                    </StackPanel>
+
+                        <Button
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Command="{Binding ExportExcelFileCommand}"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            ToolTip="MaterialDesignRaisedButton with Round Corners">
+                            <TextBlock Text="Xuất file exel" />
+                        </Button>
+                    </WrapPanel>
                 </Grid>
 
-                <Border Grid.Row="1">
-                    <Grid>
+                <Grid Grid.Row="1">
+                    <ListView
+                        HorizontalAlignment="Center"
+                        Background="Wheat"
+                        ItemsSource="{Binding CustomerListInPage, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItem="{Binding SelectedCustomer, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Idcustomer}" Header="Id" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Displayname}" Header="DisplayName" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Address}" Header="Address" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Phone}" Header="Phone" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Email}" Header="Email" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Moreinfo}" Header="MoreInfo" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Contractdate}" Header="Date" />
 
-                        <ListView
-                            HorizontalAlignment="Center"
-                            Background="Wheat"
-                            ItemsSource="{Binding CustomerListInPage, UpdateSourceTrigger=PropertyChanged}"
-                            SelectedItem="{Binding SelectedCustomer, UpdateSourceTrigger=PropertyChanged}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Idcustomer}" Header="Id" />
-                                    <GridViewColumn DisplayMemberBinding="{Binding Displayname}" Header="DisplayName" />
-                                    <GridViewColumn DisplayMemberBinding="{Binding Address}" Header="Address" />
-                                    <GridViewColumn DisplayMemberBinding="{Binding Phone}" Header="Phone" />
-                                    <GridViewColumn DisplayMemberBinding="{Binding Email}" Header="Email" />
-                                    <GridViewColumn DisplayMemberBinding="{Binding Moreinfo}" Header="MoreInfo" />
-                                    <GridViewColumn DisplayMemberBinding="{Binding Contractdate}" Header="Date" />
+                                <GridViewColumn Header="Options">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Opened">
+                                                        <i:InvokeCommandAction Command="{Binding DataContext.SelectCustomerPopupCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}" />
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
 
-                                    <GridViewColumn Header="Options">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges">
-                                                    <i:Interaction.Triggers>
-                                                        <i:EventTrigger EventName="Opened">
-                                                            <i:InvokeCommandAction Command="{Binding DataContext.SelectCustomerPopupCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}" />
-                                                        </i:EventTrigger>
-                                                    </i:Interaction.Triggers>
-
-                                                    <ListBox>
-                                                        <ListBoxItem HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                            <Button
-                                                                materialDesign:ButtonAssist.CornerRadius="10"
-                                                                Command="{Binding DataContext.OpenDeleteCustomerCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                                Style="{StaticResource MaterialDesignRaisedButton}"
-                                                                ToolTip="MaterialDesignRaisedButton with Round Corners">
-                                                                <TextBlock Text="Xóa" />
-                                                            </Button>
-                                                        </ListBoxItem>
-                                                        <ListBoxItem HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                            <Button
-                                                                materialDesign:ButtonAssist.CornerRadius="10"
-                                                                Command="{Binding DataContext.OpenUpdateCustomerCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                                Style="{StaticResource MaterialDesignRaisedButton}"
-                                                                ToolTip="MaterialDesignRaisedButton with Round Corners">
-                                                                <TextBlock Text="Sửa" />
-                                                            </Button>
-                                                        </ListBoxItem>
-                                                    </ListBox>
-                                                </materialDesign:PopupBox>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Grid>
-                </Border>
+                                                <ListBox>
+                                                    <ListBoxItem HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <Button
+                                                            materialDesign:ButtonAssist.CornerRadius="10"
+                                                            Command="{Binding DataContext.OpenDeleteCustomerCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                            Style="{StaticResource MaterialDesignRaisedButton}"
+                                                            ToolTip="MaterialDesignRaisedButton with Round Corners">
+                                                            <TextBlock Text="Xóa" />
+                                                        </Button>
+                                                    </ListBoxItem>
+                                                    <ListBoxItem HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <Button
+                                                            materialDesign:ButtonAssist.CornerRadius="10"
+                                                            Command="{Binding DataContext.OpenUpdateCustomerCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                            Style="{StaticResource MaterialDesignRaisedButton}"
+                                                            ToolTip="MaterialDesignRaisedButton with Round Corners">
+                                                            <TextBlock Text="Sửa" />
+                                                        </Button>
+                                                    </ListBoxItem>
+                                                </ListBox>
+                                            </materialDesign:PopupBox>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
 
                 <StackPanel
                     Grid.Row="2"
@@ -240,11 +236,11 @@
                 HorizontalAlignment="Center"
                 Text="Đang tải tài nguyên ..." />
             <ProgressBar
+                Width="50"
+                Height="50"
                 Margin="0,20,0,0"
                 IsIndeterminate="{Binding IsLoadingData}"
                 Style="{StaticResource MaterialDesignCircularProgressBar}"
-                Width="50"
-                Height="50"
                 Value="50" />
         </Grid>
     </Grid>

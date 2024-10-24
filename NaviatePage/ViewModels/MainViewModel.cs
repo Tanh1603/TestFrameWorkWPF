@@ -10,9 +10,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace NaviatePage.ViewModel
 {
@@ -32,8 +34,8 @@ namespace NaviatePage.ViewModel
         {
             _serviceProvider = provider;
             _navigationStore = provider.GetRequiredService<NavigationStore>();
-            //CurrentViewModel = _serviceProvider.GetRequiredService<NavigateViewModel>();
-            CurrentViewModel = _serviceProvider.GetRequiredService<LoginViewModel>();
+            CurrentViewModel = _serviceProvider.GetRequiredService<NavigateViewModel>();
+            //CurrentViewModel = _serviceProvider.GetRequiredService<LoginViewModel>();
             //CurrentViewModel = _serviceProvider.GetRequiredService<RegisterViewModel>();
             _navigationStore.CurrentViewModelChanged += () =>
             {
@@ -66,6 +68,17 @@ namespace NaviatePage.ViewModel
             else if (window.WindowState == WindowState.Maximized)
             {
                 window.WindowState = WindowState.Normal;
+            }
+        }
+
+        [RelayCommand]
+        private void DragSizeWindow()
+        {
+            var window = Application.Current.MainWindow;
+            if (window != null)
+            {
+                window.DragMove();
+                window.ResizeMode = ResizeMode.CanResize;
             }
         }
     }
